@@ -27,11 +27,11 @@
         body {
             background-color: var(--bg-color);
             color: var(--text-dark);
-            padding-bottom: 90px;
+            padding-bottom: 100px;
         }
 
         header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
             color: white;
             padding: 1.2rem;
             text-align: center;
@@ -39,7 +39,7 @@
         }
 
         header h1 {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
         }
 
         .container {
@@ -62,7 +62,7 @@
         .city-header {
             padding: 14px 12px;
             font-weight: bold;
-            font-size: 1rem;
+            font-size: 0.95rem;
             cursor: pointer;
             display: flex;
             justify-content: space-between;
@@ -84,16 +84,16 @@
             transform: rotate(180deg);
         }
 
-        /* Cores das cidades */
-        .city-novo-hamburgo .city-header { background: linear-gradient(135deg, #f59e0b, #d97706); }
-        .city-estancia-velha .city-header { background: linear-gradient(135deg, #10b981, #059669); }
-        .city-sao-leopoldo .city-header { background: linear-gradient(135deg, #3b82f6, #2563eb); }
-        .city-campo-bom .city-header { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
-        .city-ivoti .city-header { background: linear-gradient(135deg, #ec4899, #db2777); }
+        /* Cores Temáticas das Cidades */
+        .city-novo-hamburgo .city-header { background: #f59e0b; }
+        .city-estancia-velha .city-header { background: #10b981; }
+        .city-sao-leopoldo .city-header { background: #3b82f6; }
+        .city-campo-bom .city-header { background: #8b5cf6; }
+        .city-ivoti .city-header { background: #64748b; }
 
         .neighborhood-list {
             display: none;
-            max-height: 450px;
+            max-height: 500px;
             overflow-y: auto;
         }
 
@@ -113,24 +113,20 @@
             border-bottom: none;
         }
 
-        .neighborhood-item:nth-child(even) {
-            background-color: #fafafa;
-        }
-
         .neighborhood-info {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
 
         .neighborhood-name {
+            font-weight: 500;
             flex: 1;
-            margin-right: 8px;
         }
 
         .price {
-            color: var(--success);
+            color: #059669;
             font-weight: bold;
             white-space: nowrap;
         }
@@ -144,16 +140,16 @@
 
         .btn-control {
             border: none;
-            width: 32px;
-            height: 32px;
+            width: 30px;
+            height: 30px;
             border-radius: 6px;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            transition: transform 0.1s, opacity 0.2s;
+            transition: transform 0.1s;
         }
 
         .btn-control:active { transform: scale(0.9); }
@@ -162,14 +158,11 @@
         
         .counter {
             font-weight: bold;
-            min-width: 24px;
+            min-width: 20px;
             text-align: center;
-            font-size: 1rem;
         }
 
-        .counter.has-value {
-            color: var(--primary);
-        }
+        .counter.has-value { color: var(--primary); }
 
         /* Rodapé Fixo */
         .bottom-bar {
@@ -179,125 +172,60 @@
             width: 100%;
             background-color: white;
             box-shadow: 0 -4px 15px rgba(0,0,0,0.1);
-            padding: 12px 20px;
+            padding: 15px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             z-index: 1000;
         }
 
-        .bottom-buttons {
-            display: flex;
-            gap: 10px;
-        }
-
         .total-display {
             font-size: 1.4rem;
             font-weight: bold;
-            color: var(--text-dark);
         }
 
-        .total-amount {
-            color: var(--primary);
+        .total-amount { color: var(--primary); }
+
+        .action-group {
+            display: flex;
+            gap: 8px;
         }
 
         .btn-action {
             border: none;
-            padding: 10px 16px;
+            padding: 10px 15px;
             border-radius: 8px;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.2s;
-            font-size: 0.9rem;
-        }
-
-        .btn-collapse {
-            background-color: #6b7280;
+            font-size: 0.85rem;
             color: white;
         }
 
-        .btn-collapse:hover {
-            background-color: #4b5563;
-        }
-
-        .btn-reset {
-            background-color: var(--danger);
-            color: white;
-        }
-
-        .btn-reset:hover {
-            background-color: #dc2626;
-        }
+        .btn-collapse { background-color: #6b7280; }
+        .btn-reset { background-color: #ef4444; }
 
         /* Responsividade */
-        @media (max-width: 1200px) {
-            .container {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-
-        @media (max-width: 800px) {
-            .container {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 550px) {
-            .container {
-                grid-template-columns: 1fr;
-            }
-            
-            header h1 {
-                font-size: 1.2rem;
-            }
-
-            .bottom-bar {
-                flex-direction: column;
-                gap: 10px;
-                padding: 10px 15px;
-            }
-
-            .bottom-buttons {
-                width: 100%;
-                justify-content: center;
-            }
-
-            body { 
-                padding-bottom: 120px; 
-            }
-        }
-
-        /* Scrollbar estilizada */
-        .neighborhood-list::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .neighborhood-list::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-
-        .neighborhood-list::-webkit-scrollbar-thumb {
-            background: #c1c1c1;
-            border-radius: 3px;
-        }
-
-        .neighborhood-list::-webkit-scrollbar-thumb:hover {
-            background: #a1a1a1;
+        @media (max-width: 1100px) { .container { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 768px) { .container { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 480px) {
+            .container { grid-template-columns: 1fr; }
+            .bottom-bar { flex-direction: column; gap: 12px; }
+            body { padding-bottom: 140px; }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>🚚 Calculadora de Taxas de Entrega</h1>
+        <h1>Calculadora de Entregas</h1>
     </header>
 
     <div class="container" id="app"></div>
 
     <div class="bottom-bar">
-        <div class="bottom-buttons">
-            <button class="btn-action btn-collapse" onclick="recolherTudo()">📁 Recolher</button>
-            <button class="btn-action btn-reset" onclick="resetarTudo()">🔄 Limpar</button>
+        <div class="action-group">
+            <button class="btn-action btn-collapse" onclick="recolherTudo()">Recolher</button>
+            <button class="btn-action btn-reset" onclick="resetarTudo()">Limpar</button>
         </div>
         <div class="total-display">
             Total: R$ <span id="total-amount" class="total-amount">0,00</span>
@@ -305,118 +233,73 @@
     </div>
 
     <script>
-        // ==========================================
-        // DADOS DAS CIDADES E BAIRROS
-        // ==========================================
         const dadosEntregas = {
             "Novo Hamburgo": {
                 classe: "city-novo-hamburgo",
                 bairros: [
-                    { nome: "Primavera", valor: 3.00 },
-                    { nome: "Petrópolis", valor: 5.00 },
-                    { nome: "Rincão", valor: 5.00 },
-                    { nome: "Rio Branco", valor: 5.00 },
-                    { nome: "Vila Rosa", valor: 5.00 },
-                    { nome: "Centro", valor: 6.00 },
-                    { nome: "Operário", valor: 6.00 },
-                    { nome: "Ideal", valor: 6.00 },
-                    { nome: "Pátria Nova", valor: 8.00 },
-                    { nome: "Guarani", valor: 8.00 },
-                    { nome: "Ouro Branco", valor: 8.00 },
-                    { nome: "Liberdade", valor: 8.00 },
-                    { nome: "Boa Vista", valor: 8.00 },
-                    { nome: "Hamburgo Velho", valor: 8.00 },
-                    { nome: "Vila Nova", valor: 8.00 },
-                    { nome: "Jardim Mauá", valor: 8.00 },
-                    { nome: "Industrial", valor: 8.00 },
-                    { nome: "Boa Saúde", valor: 8.00 },
-                    { nome: "Canudos", valor: 10.00 },
-                    { nome: "Mundo Novo", valor: 10.00 },
-                    { nome: "Santo Afonso", valor: 10.00 },
-                    { nome: "São José", valor: 10.00 },
-                    { nome: "São Jorge", valor: 10.00 },
-                    { nome: "Roselândia", valor: 10.00 }
+                    { nome: "Primavera", valor: 3.00 }, { nome: "Petrópolis", valor: 5.00 },
+                    { nome: "Rincão", valor: 5.00 }, { nome: "Rio Branco", valor: 5.00 },
+                    { nome: "Vila Rosa", valor: 5.00 }, { nome: "Centro", valor: 6.00 },
+                    { nome: "Operário", valor: 6.00 }, { nome: "Ideal", valor: 6.00 },
+                    { nome: "Pátria Nova", valor: 8.00 }, { nome: "Guarani", valor: 8.00 },
+                    { nome: "Ouro Branco", valor: 8.00 }, { nome: "Liberdade", valor: 8.00 },
+                    { nome: "Boa Vista", valor: 8.00 }, { nome: "Hamburgo Velho", valor: 8.00 },
+                    { nome: "Vila Nova", valor: 8.00 }, { nome: "Jardim Mauá", valor: 8.00 },
+                    { nome: "Industrial", valor: 8.00 }, { nome: "Boa Saúde", valor: 8.00 },
+                    { nome: "Canudos", valor: 10.00 }, { nome: "Mundo Novo", valor: 10.00 },
+                    { nome: "Santo Afonso", valor: 10.00 }, { nome: "São José", valor: 10.00 },
+                    { nome: "São Jorge", valor: 10.00 }, { nome: "Roselândia", valor: 10.00 }
                 ]
             },
             "Estância Velha": {
                 classe: "city-estancia-velha",
                 bairros: [
-                    { nome: "Rincão dos Ilhéus", valor: 9.00 },
-                    { nome: "Sol Nascente", valor: 9.00 },
-                    { nome: "Encosta do Sol", valor: 10.00 },
-                    { nome: "União", valor: 10.00 },
-                    { nome: "Rincão Gaúcho", valor: 11.00 },
-                    { nome: "Floresta", valor: 13.00 },
-                    { nome: "Centro", valor: 13.00 },
-                    { nome: "Das Rosas", valor: 15.00 },
-                    { nome: "Bela Vista", valor: 15.00 },
-                    { nome: "Lira", valor: 15.00 },
-                    { nome: "Lago Azul", valor: 15.00 },
-                    { nome: "Das Quintas", valor: 18.00 }
+                    { nome: "Rincão dos Ilhéus", valor: 9.00 }, { nome: "Sol Nascente", valor: 9.00 },
+                    { nome: "Encosta do Sol", valor: 10.00 }, { nome: "União", valor: 10.00 },
+                    { nome: "Rincão Gaúcho", valor: 11.00 }, { nome: "Floresta", valor: 13.00 },
+                    { nome: "Centro", valor: 13.00 }, { nome: "Das Rosas", valor: 15.00 },
+                    { nome: "Bela Vista", valor: 15.00 }, { nome: "Lira", valor: 15.00 },
+                    { nome: "Lago Azul", valor: 15.00 }, { nome: "Das Quintas", valor: 18.00 }
                 ]
             },
             "São Leopoldo": {
                 classe: "city-sao-leopoldo",
                 bairros: [
-                    { nome: "Scharlau", valor: 11.00 },
-                    { nome: "Santos Dumont", valor: 11.00 },
-                    { nome: "Campina", valor: 13.00 },
-                    { nome: "Rio dos Sinos", valor: 13.00 },
-                    { nome: "São Miguel", valor: 13.00 },
-                    { nome: "Arroio da Manteiga", valor: 13.00 },
-                    { nome: "Centro", valor: 15.00 },
-                    { nome: "Fião", valor: 15.00 },
-                    { nome: "Cristo Rei", valor: 15.00 },
-                    { nome: "Padre Reus", valor: 15.00 },
-                    { nome: "São José", valor: 15.00 },
-                    { nome: "Morro do Espelho", valor: 15.00 },
-                    { nome: "Pinheiro", valor: 15.00 },
-                    { nome: "Rio Branco", valor: 15.00 },
-                    { nome: "Santa Tereza", valor: 15.00 },
-                    { nome: "Jardim América", valor: 15.00 },
-                    { nome: "Santo André", valor: 15.00 },
-                    { nome: "Campestre", valor: 15.00 },
+                    { nome: "Scharlau", valor: 11.00 }, { nome: "Santos Dumont", valor: 11.00 },
+                    { nome: "Campina", valor: 13.00 }, { nome: "Rio dos Sinos", valor: 13.00 },
+                    { nome: "São Miguel", valor: 13.00 }, { nome: "Arroio da Manteiga", valor: 13.00 },
+                    { nome: "Centro", valor: 15.00 }, { nome: "Fião", valor: 15.00 },
+                    { nome: "Cristo Rei", valor: 15.00 }, { nome: "Padre Reus", valor: 15.00 },
+                    { nome: "São José", valor: 15.00 }, { nome: "Morro do Espelho", valor: 15.00 },
+                    { nome: "Pinheiro", valor: 15.00 }, { nome: "Rio Branco", valor: 15.00 },
+                    { nome: "Santa Tereza", valor: 15.00 }, { nome: "Jardim América", valor: 15.00 },
+                    { nome: "Santo André", valor: 15.00 }, { nome: "Campestre", valor: 15.00 },
                     { nome: "Feitoria", valor: 15.00 }
                 ]
             },
             "Campo Bom": {
                 classe: "city-campo-bom",
                 bairros: [
-                    { nome: "Imigrante", valor: 11.00 },
-                    { nome: "Ipiranga", valor: 11.00 },
-                    { nome: "Genuíno Sampaio", valor: 13.00 },
-                    { nome: "Celeste", valor: 13.00 },
-                    { nome: "Centro", valor: 13.00 },
-                    { nome: "Vila Dona Augusta", valor: 15.00 },
-                    { nome: "Metzler", valor: 15.00 },
-                    { nome: "Junchen", valor: 15.00 },
-                    { nome: "Dona Leopoldina", valor: 15.00 },
-                    { nome: "Dos Gringos", valor: 15.00 },
-                    { nome: "Paulista", valor: 17.00 },
-                    { nome: "Bela Vista", valor: 17.00 },
+                    { nome: "Imigrante", valor: 11.00 }, { nome: "Ipiranga", valor: 11.00 },
+                    { nome: "Genuíno Sampaio", valor: 13.00 }, { nome: "Celeste", valor: 13.00 },
+                    { nome: "Centro", valor: 13.00 }, { nome: "Vila Dona Augusta", valor: 15.00 },
+                    { nome: "Metzler", valor: 15.00 }, { nome: "Junchen", valor: 15.00 },
+                    { nome: "Dona Leopoldina", valor: 15.00 }, { nome: "Dos Gringos", valor: 15.00 },
+                    { nome: "Paulista", valor: 17.00 }, { nome: "Bela Vista", valor: 17.00 },
                     { nome: "Porto Blos", valor: 17.00 }
                 ]
             },
             "Ivoti": {
                 classe: "city-ivoti",
-                bairros: [
-                    { nome: "Ivoti", valor: 20.00 }
-                ]
+                bairros: [{ nome: "Ivoti", valor: 20.00 }]
             }
         };
 
-        // ==========================================
-        // LÓGICA DO SISTEMA
-        // ==========================================
         let totalGeral = 0;
         let contagens = {};
 
         function formatarMoeda(valor) {
             return valor.toFixed(2).replace('.', ',');
-        }
-
-        function criarIdUnico(cidade, bairro) {
-            return `${cidade}-${bairro}`.replace(/\s+/g, '_');
         }
 
         function renderizarApp() {
@@ -425,8 +308,12 @@
 
             for (const cidade in dadosEntregas) {
                 const dados = dadosEntregas[cidade];
-                const bairros = dados.bairros;
                 
+                // --- ORDENAÇÃO ALFABÉTICA AQUI ---
+                const bairrosOrdenados = [...dados.bairros].sort((a, b) => 
+                    a.nome.localeCompare(b.nome, 'pt-BR', { sensitivity: 'base' })
+                );
+
                 const coluna = document.createElement('div');
                 coluna.className = `city-column ${dados.classe}`;
                 
@@ -438,13 +325,12 @@
                 const lista = document.createElement('div');
                 lista.className = 'neighborhood-list';
 
-                bairros.forEach(bairro => {
-                    const idUnico = criarIdUnico(cidade, bairro.nome);
+                bairrosOrdenados.forEach(bairro => {
+                    const idUnico = `${cidade}-${bairro.nome}`.replace(/\s+/g, '_');
                     contagens[idUnico] = 0;
 
                     const item = document.createElement('div');
                     item.className = 'neighborhood-item';
-
                     item.innerHTML = `
                         <div class="neighborhood-info">
                             <span class="neighborhood-name">${bairro.nome}</span>
@@ -466,52 +352,35 @@
         }
 
         function alterarValor(id, operacao, valorBairro) {
-            if (operacao === -1 && contagens[id] === 0) {
-                return;
-            }
+            if (operacao === -1 && contagens[id] === 0) return;
 
             contagens[id] += operacao;
             const counterElement = document.getElementById(`count-${id}`);
             counterElement.innerText = contagens[id];
             
-            if (contagens[id] > 0) {
-                counterElement.classList.add('has-value');
-            } else {
-                counterElement.classList.remove('has-value');
-            }
+            contagens[id] > 0 ? counterElement.classList.add('has-value') : counterElement.classList.remove('has-value');
 
-            if (operacao === 1) {
-                totalGeral += valorBairro;
-            } else {
-                totalGeral -= valorBairro;
-            }
-
-            totalGeral = Math.round(totalGeral * 100) / 100;
-            totalGeral = Math.max(0, totalGeral);
+            totalGeral += (operacao * valorBairro);
+            totalGeral = Math.max(0, Math.round(totalGeral * 100) / 100);
 
             document.getElementById('total-amount').innerText = formatarMoeda(totalGeral);
         }
 
         function recolherTudo() {
-            const colunas = document.querySelectorAll('.city-column');
-            colunas.forEach(col => col.classList.remove('active'));
+            document.querySelectorAll('.city-column').forEach(col => col.classList.remove('active'));
         }
 
         function resetarTudo() {
             totalGeral = 0;
+            document.getElementById('total-amount').innerText = '0,00';
             for (const id in contagens) {
                 contagens[id] = 0;
-                const counterElement = document.getElementById(`count-${id}`);
-                if (counterElement) {
-                    counterElement.innerText = '0';
-                    counterElement.classList.remove('has-value');
-                }
+                const el = document.getElementById(`count-${id}`);
+                if (el) { el.innerText = '0'; el.classList.remove('has-value'); }
             }
-            document.getElementById('total-amount').innerText = '0,00';
             recolherTudo();
         }
 
-        // Inicia a aplicação
         renderizarApp();
     </script>
 </body>
