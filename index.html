@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Taxas de Entrega</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-dark: #1f2937;
+            --text-light: #6b7280;
+            --danger: #ef4444;
+            --success: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            padding-bottom: 80px; /* Espaço para o rodapé fixo */
+        }
+
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 15px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        /* Coluna da Cidade */
+        .city-column {
+            background: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            overflow: hidden;
+            align-self: start;
+        }
+
+        .city-header {
+            background-color: var(--card-bg);
+            padding: 15px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e5e7eb;
+            transition: background 0.2s;
+        }
+
+        .city-header:hover {
+            background-color: #f9fafb;
+        }
+
+        .city-header::after {
+            content: '▼';
+            font-size: 0.8rem;
+            transition: transform 0.3s;
+        }
+
+        .city-column.active .city-header::after {
+            transform: rotate(180deg);
+        }
+
+        .neighborhood-list {
+            display: none;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .city-column.active .neighborhood-list {
+            display: block;
+        }
+
+        .neighborhood-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid #f3f4f6;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .neighborhood-item:last-child {
+            border-bottom: none;
+        }
+
+        .neighborhood-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .price {
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .btn-control {
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 4px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: opacity 0.2s;
+        }
+
+        .btn-control:active { transform: scale(0.95); }
+        .btn-minus { background-color: var(--danger); }
+        .btn-plus { background-color: var(--success); }
+        
+        .counter {
+            font-weight: bold;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        /* Rodapé Fixo */
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: white;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .total-display {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--text-dark);
+        }
+
+        .total-amount {
+            color: var(--primary);
+        }
+
+        .btn-collapse-all {
+            background-color: var(--text-light);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-collapse-all:hover {
+            background-color: var(--text-dark);
+        }
+
+        /* Responsividade para Celular */
+        @media (max-width: 900px) {
+            .container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                grid-template-columns: 1fr; /* 1 coluna no celular */
+            }
+            .bottom-bar {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+            body { padding-bottom: 110px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Calculadora de Entregas</h1>
+    </header>
+
+    <div class="container" id="app">
+        <!-- O conteúdo será gerado pelo JavaScript aqui -->
+    </div>
+
+    <div class="bottom-bar">
+        <button class="btn-collapse-all" onclick="recolherTudo()">Recolher Tudo</button>
+        <div class="total-display">
+            Total: R$ <span id="total-amount" class="total-amount">0,00</span>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // DADOS DAS CIDADES E BAIRROS (EDITE AQUI)
+        // ==========================================
+        const dadosEntregas = {
+            "Cidade A": [
+                { nome: "Centro", valor: 5.00 },
+                { nome: "Bairro Norte", valor: 8.50 },
+                { nome: "Bairro Sul", valor: 10.00 }
+            ],
+            "Cidade B": [
+                { nome: "Vila Nova", valor: 12.00 },
+                { nome: "Jardim das Flores", valor: 15.00 }
+            ],
+            "Cidade C": [
+                { nome: "Distrito Industrial", valor: 20.00 },
+                { nome: "Residencial", valor: 18.00 },
+                { nome: "Colina", valor: 22.50 }
+            ],
+            "Cidade D": [
+                { nome: "Litoral", valor: 30.00 },
+                { nome: "Serrano", valor: 25.00 }
+            ]
+        };
+
+        // ==========================================
+        // LÓGICA DO SISTEMA
+        // ==========================================
+        let totalGeral = 0;
+        let contagens = {}; // Guarda a quantidade selecionada de cada bairro
+
+        function formatarMoeda(valor) {
+            return valor.toFixed(2).replace('.', ',');
+        }
+
+        function renderizarApp() {
+            const app = document.getElementById('app');
+            app.innerHTML = '';
+
+            // Itera sobre as cidades
+            for (const cidade in dadosEntregas) {
+                const bairros = dadosEntregas[cidade];
+                
+                // Cria a coluna da cidade
+                const coluna = document.createElement('div');
+                coluna.className = 'city-column';
+                
+                // Cria o cabeçalho da cidade (clicável)
+                const header = document.createElement('div');
+                header.className = 'city-header';
+                header.innerText = cidade;
+                header.onclick = () => coluna.classList.toggle('active');
+
+                // Cria a lista de bairros
+                const lista = document.createElement('div');
+                lista.className = 'neighborhood-list';
+
+                bairros.forEach(bairro => {
+                    // ID único para controle
+                    const idUnico = `${cidade}-${bairro.nome}`;
+                    contagens[idUnico] = 0; // Inicia em 0
+
+                    const item = document.createElement('div');
+                    item.className = 'neighborhood-item';
+
+                    item.innerHTML = `
+                        <div class="neighborhood-info">
+                            <span>${bairro.nome}</span>
+                            <span class="price">R$ ${formatarMoeda(bairro.valor)}</span>
+                        </div>
+                        <div class="controls">
+                            <button class="btn-control btn-minus" onclick="alterarValor('${idUnico}', -1, ${bairro.valor})">-</button>
+                            <span class="counter" id="count-${idUnico}">0</span>
+                            <button class="btn-control btn-plus" onclick="alterarValor('${idUnico}', 1, ${bairro.valor})">+</button>
+                        </div>
+                    `;
+                    lista.appendChild(item);
+                });
+
+                coluna.appendChild(header);
+                coluna.appendChild(lista);
+                app.appendChild(coluna);
+            }
+        }
+
+        function alterarValor(id, operacao, valorBairro) {
+            // Verifica se é subtração e se a contagem já está em zero
+            if (operacao === -1 && contagens[id] === 0) {
+                return; // Não deixa ficar negativo
+            }
+
+            // Atualiza a contagem individual
+            contagens[id] += operacao;
+            document.getElementById(`count-${id}`).innerText = contagens[id];
+
+            // Atualiza o total geral
+            if (operacao === 1) {
+                totalGeral += valorBairro;
+            } else {
+                totalGeral -= valorBairro;
+            }
+
+            // Evita erro de precisão decimal do JavaScript (ex: 0.000000001)
+            totalGeral = Math.max(0, totalGeral); 
+
+            // Atualiza a tela
+            document.getElementById('total-amount').innerText = formatarMoeda(totalGeral);
+        }
+
+        function recolherTudo() {
+            const colunas = document.querySelectorAll('.city-column');
+            colunas.forEach(col => col.classList.remove('active'));
+        }
+
+        // Inicia a aplicação
+        renderizarApp();
+    </script>
+</body>
+</html>
