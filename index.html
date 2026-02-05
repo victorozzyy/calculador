@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -26,65 +27,73 @@
         body {
             background-color: var(--bg-color);
             color: var(--text-dark);
-            padding-bottom: 80px; /* Espaço para o rodapé fixo */
+            padding-bottom: 90px;
         }
 
         header {
-            background-color: var(--primary);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 1rem;
+            padding: 1.2rem;
             text-align: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        header h1 {
+            font-size: 1.5rem;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 20px auto;
-            padding: 0 15px;
+            padding: 0 10px;
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
         }
 
-        /* Coluna da Cidade */
         .city-column {
             background: var(--card-bg);
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             overflow: hidden;
             align-self: start;
         }
 
         .city-header {
-            background-color: var(--card-bg);
-            padding: 15px;
+            padding: 14px 12px;
             font-weight: bold;
-            font-size: 1.1rem;
+            font-size: 1rem;
             cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #e5e7eb;
-            transition: background 0.2s;
+            color: white;
+            transition: filter 0.2s;
         }
 
         .city-header:hover {
-            background-color: #f9fafb;
+            filter: brightness(1.1);
         }
 
-        .city-header::after {
-            content: '▼';
+        .city-header .arrow {
             font-size: 0.8rem;
             transition: transform 0.3s;
         }
 
-        .city-column.active .city-header::after {
+        .city-column.active .city-header .arrow {
             transform: rotate(180deg);
         }
 
+        /* Cores das cidades */
+        .city-novo-hamburgo .city-header { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .city-estancia-velha .city-header { background: linear-gradient(135deg, #10b981, #059669); }
+        .city-sao-leopoldo .city-header { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+        .city-campo-bom .city-header { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+        .city-ivoti .city-header { background: linear-gradient(135deg, #ec4899, #db2777); }
+
         .neighborhood-list {
             display: none;
-            max-height: 400px;
+            max-height: 450px;
             overflow-y: auto;
         }
 
@@ -93,57 +102,73 @@
         }
 
         .neighborhood-item {
-            padding: 12px 15px;
-            border-bottom: 1px solid #f3f4f6;
+            padding: 10px 12px;
+            border-bottom: 1px solid #f0f0f0;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
         }
 
         .neighborhood-item:last-child {
             border-bottom: none;
         }
 
+        .neighborhood-item:nth-child(even) {
+            background-color: #fafafa;
+        }
+
         .neighborhood-info {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .neighborhood-name {
+            flex: 1;
+            margin-right: 8px;
         }
 
         .price {
             color: var(--success);
             font-weight: bold;
+            white-space: nowrap;
         }
 
         .controls {
             display: flex;
             align-items: center;
             justify-content: flex-end;
-            gap: 10px;
+            gap: 8px;
         }
 
         .btn-control {
             border: none;
-            width: 30px;
-            height: 30px;
-            border-radius: 4px;
-            font-size: 1.2rem;
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            font-size: 1.3rem;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            transition: opacity 0.2s;
+            transition: transform 0.1s, opacity 0.2s;
         }
 
-        .btn-control:active { transform: scale(0.95); }
+        .btn-control:active { transform: scale(0.9); }
         .btn-minus { background-color: var(--danger); }
         .btn-plus { background-color: var(--success); }
         
         .counter {
             font-weight: bold;
-            min-width: 20px;
+            min-width: 24px;
             text-align: center;
+            font-size: 1rem;
+        }
+
+        .counter.has-value {
+            color: var(--primary);
         }
 
         /* Rodapé Fixo */
@@ -153,16 +178,21 @@
             left: 0;
             width: 100%;
             background-color: white;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-            padding: 15px 20px;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.1);
+            padding: 12px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             z-index: 1000;
         }
 
+        .bottom-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
         .total-display {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: bold;
             color: var(--text-dark);
         }
@@ -171,53 +201,104 @@
             color: var(--primary);
         }
 
-        .btn-collapse-all {
-            background-color: var(--text-light);
-            color: white;
+        .btn-action {
             border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
+            padding: 10px 16px;
+            border-radius: 8px;
             font-weight: bold;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: all 0.2s;
+            font-size: 0.9rem;
         }
 
-        .btn-collapse-all:hover {
-            background-color: var(--text-dark);
+        .btn-collapse {
+            background-color: #6b7280;
+            color: white;
         }
 
-        /* Responsividade para Celular */
-        @media (max-width: 900px) {
+        .btn-collapse:hover {
+            background-color: #4b5563;
+        }
+
+        .btn-reset {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .btn-reset:hover {
+            background-color: #dc2626;
+        }
+
+        /* Responsividade */
+        @media (max-width: 1200px) {
+            .container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 800px) {
             .container {
                 grid-template-columns: repeat(2, 1fr);
             }
         }
 
-        @media (max-width: 600px) {
+        @media (max-width: 550px) {
             .container {
-                grid-template-columns: 1fr; /* 1 coluna no celular */
+                grid-template-columns: 1fr;
             }
+            
+            header h1 {
+                font-size: 1.2rem;
+            }
+
             .bottom-bar {
                 flex-direction: column;
                 gap: 10px;
-                text-align: center;
+                padding: 10px 15px;
             }
-            body { padding-bottom: 110px; }
+
+            .bottom-buttons {
+                width: 100%;
+                justify-content: center;
+            }
+
+            body { 
+                padding-bottom: 120px; 
+            }
+        }
+
+        /* Scrollbar estilizada */
+        .neighborhood-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .neighborhood-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .neighborhood-list::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+
+        .neighborhood-list::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
         }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>Calculadora de Entregas</h1>
+        <h1>🚚 Calculadora de Taxas de Entrega</h1>
     </header>
 
-    <div class="container" id="app">
-        <!-- O conteúdo será gerado pelo JavaScript aqui -->
-    </div>
+    <div class="container" id="app"></div>
 
     <div class="bottom-bar">
-        <button class="btn-collapse-all" onclick="recolherTudo()">Recolher Tudo</button>
+        <div class="bottom-buttons">
+            <button class="btn-action btn-collapse" onclick="recolherTudo()">📁 Recolher</button>
+            <button class="btn-action btn-reset" onclick="resetarTudo()">🔄 Limpar</button>
+        </div>
         <div class="total-display">
             Total: R$ <span id="total-amount" class="total-amount">0,00</span>
         </div>
@@ -225,76 +306,152 @@
 
     <script>
         // ==========================================
-        // DADOS DAS CIDADES E BAIRROS (EDITE AQUI)
+        // DADOS DAS CIDADES E BAIRROS
         // ==========================================
         const dadosEntregas = {
-            "Cidade A": [
-                { nome: "Centro", valor: 5.00 },
-                { nome: "Bairro Norte", valor: 8.50 },
-                { nome: "Bairro Sul", valor: 10.00 }
-            ],
-            "Cidade B": [
-                { nome: "Vila Nova", valor: 12.00 },
-                { nome: "Jardim das Flores", valor: 15.00 }
-            ],
-            "Cidade C": [
-                { nome: "Distrito Industrial", valor: 20.00 },
-                { nome: "Residencial", valor: 18.00 },
-                { nome: "Colina", valor: 22.50 }
-            ],
-            "Cidade D": [
-                { nome: "Litoral", valor: 30.00 },
-                { nome: "Serrano", valor: 25.00 }
-            ]
+            "Novo Hamburgo": {
+                classe: "city-novo-hamburgo",
+                bairros: [
+                    { nome: "Primavera", valor: 3.00 },
+                    { nome: "Petrópolis", valor: 5.00 },
+                    { nome: "Rincão", valor: 5.00 },
+                    { nome: "Rio Branco", valor: 5.00 },
+                    { nome: "Vila Rosa", valor: 5.00 },
+                    { nome: "Centro", valor: 6.00 },
+                    { nome: "Operário", valor: 6.00 },
+                    { nome: "Ideal", valor: 6.00 },
+                    { nome: "Pátria Nova", valor: 8.00 },
+                    { nome: "Guarani", valor: 8.00 },
+                    { nome: "Ouro Branco", valor: 8.00 },
+                    { nome: "Liberdade", valor: 8.00 },
+                    { nome: "Boa Vista", valor: 8.00 },
+                    { nome: "Hamburgo Velho", valor: 8.00 },
+                    { nome: "Vila Nova", valor: 8.00 },
+                    { nome: "Jardim Mauá", valor: 8.00 },
+                    { nome: "Industrial", valor: 8.00 },
+                    { nome: "Boa Saúde", valor: 8.00 },
+                    { nome: "Canudos", valor: 10.00 },
+                    { nome: "Mundo Novo", valor: 10.00 },
+                    { nome: "Santo Afonso", valor: 10.00 },
+                    { nome: "São José", valor: 10.00 },
+                    { nome: "São Jorge", valor: 10.00 },
+                    { nome: "Roselândia", valor: 10.00 }
+                ]
+            },
+            "Estância Velha": {
+                classe: "city-estancia-velha",
+                bairros: [
+                    { nome: "Rincão dos Ilhéus", valor: 9.00 },
+                    { nome: "Sol Nascente", valor: 9.00 },
+                    { nome: "Encosta do Sol", valor: 10.00 },
+                    { nome: "União", valor: 10.00 },
+                    { nome: "Rincão Gaúcho", valor: 11.00 },
+                    { nome: "Floresta", valor: 13.00 },
+                    { nome: "Centro", valor: 13.00 },
+                    { nome: "Das Rosas", valor: 15.00 },
+                    { nome: "Bela Vista", valor: 15.00 },
+                    { nome: "Lira", valor: 15.00 },
+                    { nome: "Lago Azul", valor: 15.00 },
+                    { nome: "Das Quintas", valor: 18.00 }
+                ]
+            },
+            "São Leopoldo": {
+                classe: "city-sao-leopoldo",
+                bairros: [
+                    { nome: "Scharlau", valor: 11.00 },
+                    { nome: "Santos Dumont", valor: 11.00 },
+                    { nome: "Campina", valor: 13.00 },
+                    { nome: "Rio dos Sinos", valor: 13.00 },
+                    { nome: "São Miguel", valor: 13.00 },
+                    { nome: "Arroio da Manteiga", valor: 13.00 },
+                    { nome: "Centro", valor: 15.00 },
+                    { nome: "Fião", valor: 15.00 },
+                    { nome: "Cristo Rei", valor: 15.00 },
+                    { nome: "Padre Reus", valor: 15.00 },
+                    { nome: "São José", valor: 15.00 },
+                    { nome: "Morro do Espelho", valor: 15.00 },
+                    { nome: "Pinheiro", valor: 15.00 },
+                    { nome: "Rio Branco", valor: 15.00 },
+                    { nome: "Santa Tereza", valor: 15.00 },
+                    { nome: "Jardim América", valor: 15.00 },
+                    { nome: "Santo André", valor: 15.00 },
+                    { nome: "Campestre", valor: 15.00 },
+                    { nome: "Feitoria", valor: 15.00 }
+                ]
+            },
+            "Campo Bom": {
+                classe: "city-campo-bom",
+                bairros: [
+                    { nome: "Imigrante", valor: 11.00 },
+                    { nome: "Ipiranga", valor: 11.00 },
+                    { nome: "Genuíno Sampaio", valor: 13.00 },
+                    { nome: "Celeste", valor: 13.00 },
+                    { nome: "Centro", valor: 13.00 },
+                    { nome: "Vila Dona Augusta", valor: 15.00 },
+                    { nome: "Metzler", valor: 15.00 },
+                    { nome: "Junchen", valor: 15.00 },
+                    { nome: "Dona Leopoldina", valor: 15.00 },
+                    { nome: "Dos Gringos", valor: 15.00 },
+                    { nome: "Paulista", valor: 17.00 },
+                    { nome: "Bela Vista", valor: 17.00 },
+                    { nome: "Porto Blos", valor: 17.00 }
+                ]
+            },
+            "Ivoti": {
+                classe: "city-ivoti",
+                bairros: [
+                    { nome: "Ivoti", valor: 20.00 }
+                ]
+            }
         };
 
         // ==========================================
         // LÓGICA DO SISTEMA
         // ==========================================
         let totalGeral = 0;
-        let contagens = {}; // Guarda a quantidade selecionada de cada bairro
+        let contagens = {};
 
         function formatarMoeda(valor) {
             return valor.toFixed(2).replace('.', ',');
+        }
+
+        function criarIdUnico(cidade, bairro) {
+            return `${cidade}-${bairro}`.replace(/\s+/g, '_');
         }
 
         function renderizarApp() {
             const app = document.getElementById('app');
             app.innerHTML = '';
 
-            // Itera sobre as cidades
             for (const cidade in dadosEntregas) {
-                const bairros = dadosEntregas[cidade];
+                const dados = dadosEntregas[cidade];
+                const bairros = dados.bairros;
                 
-                // Cria a coluna da cidade
                 const coluna = document.createElement('div');
-                coluna.className = 'city-column';
+                coluna.className = `city-column ${dados.classe}`;
                 
-                // Cria o cabeçalho da cidade (clicável)
                 const header = document.createElement('div');
                 header.className = 'city-header';
-                header.innerText = cidade;
+                header.innerHTML = `<span>${cidade}</span><span class="arrow">▼</span>`;
                 header.onclick = () => coluna.classList.toggle('active');
 
-                // Cria a lista de bairros
                 const lista = document.createElement('div');
                 lista.className = 'neighborhood-list';
 
                 bairros.forEach(bairro => {
-                    // ID único para controle
-                    const idUnico = `${cidade}-${bairro.nome}`;
-                    contagens[idUnico] = 0; // Inicia em 0
+                    const idUnico = criarIdUnico(cidade, bairro.nome);
+                    contagens[idUnico] = 0;
 
                     const item = document.createElement('div');
                     item.className = 'neighborhood-item';
 
                     item.innerHTML = `
                         <div class="neighborhood-info">
-                            <span>${bairro.nome}</span>
+                            <span class="neighborhood-name">${bairro.nome}</span>
                             <span class="price">R$ ${formatarMoeda(bairro.valor)}</span>
                         </div>
                         <div class="controls">
-                            <button class="btn-control btn-minus" onclick="alterarValor('${idUnico}', -1, ${bairro.valor})">-</button>
+                            <button class="btn-control btn-minus" onclick="alterarValor('${idUnico}', -1, ${bairro.valor})">−</button>
                             <span class="counter" id="count-${idUnico}">0</span>
                             <button class="btn-control btn-plus" onclick="alterarValor('${idUnico}', 1, ${bairro.valor})">+</button>
                         </div>
@@ -309,32 +466,49 @@
         }
 
         function alterarValor(id, operacao, valorBairro) {
-            // Verifica se é subtração e se a contagem já está em zero
             if (operacao === -1 && contagens[id] === 0) {
-                return; // Não deixa ficar negativo
+                return;
             }
 
-            // Atualiza a contagem individual
             contagens[id] += operacao;
-            document.getElementById(`count-${id}`).innerText = contagens[id];
+            const counterElement = document.getElementById(`count-${id}`);
+            counterElement.innerText = contagens[id];
+            
+            if (contagens[id] > 0) {
+                counterElement.classList.add('has-value');
+            } else {
+                counterElement.classList.remove('has-value');
+            }
 
-            // Atualiza o total geral
             if (operacao === 1) {
                 totalGeral += valorBairro;
             } else {
                 totalGeral -= valorBairro;
             }
 
-            // Evita erro de precisão decimal do JavaScript (ex: 0.000000001)
-            totalGeral = Math.max(0, totalGeral); 
+            totalGeral = Math.round(totalGeral * 100) / 100;
+            totalGeral = Math.max(0, totalGeral);
 
-            // Atualiza a tela
             document.getElementById('total-amount').innerText = formatarMoeda(totalGeral);
         }
 
         function recolherTudo() {
             const colunas = document.querySelectorAll('.city-column');
             colunas.forEach(col => col.classList.remove('active'));
+        }
+
+        function resetarTudo() {
+            totalGeral = 0;
+            for (const id in contagens) {
+                contagens[id] = 0;
+                const counterElement = document.getElementById(`count-${id}`);
+                if (counterElement) {
+                    counterElement.innerText = '0';
+                    counterElement.classList.remove('has-value');
+                }
+            }
+            document.getElementById('total-amount').innerText = '0,00';
+            recolherTudo();
         }
 
         // Inicia a aplicação
