@@ -27,11 +27,11 @@
         body {
             background-color: var(--bg-color);
             color: var(--text-dark);
-            padding-bottom: 100px;
+            padding-bottom: 90px;
         }
 
         header {
-            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             padding: 1.2rem;
             text-align: center;
@@ -39,7 +39,7 @@
         }
 
         header h1 {
-            font-size: 1.4rem;
+            font-size: 1.5rem;
         }
 
         .container {
@@ -62,7 +62,7 @@
         .city-header {
             padding: 14px 12px;
             font-weight: bold;
-            font-size: 0.95rem;
+            font-size: 1rem;
             cursor: pointer;
             display: flex;
             justify-content: space-between;
@@ -84,16 +84,16 @@
             transform: rotate(180deg);
         }
 
-        /* Cores Temáticas das Cidades */
-        .city-novo-hamburgo .city-header { background: #f59e0b; }
-        .city-estancia-velha .city-header { background: #10b981; }
-        .city-sao-leopoldo .city-header { background: #3b82f6; }
-        .city-campo-bom .city-header { background: #8b5cf6; }
-        .city-ivoti .city-header { background: #64748b; }
+        /* Cores das cidades */
+        .city-novo-hamburgo .city-header { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .city-estancia-velha .city-header { background: linear-gradient(135deg, #10b981, #059669); }
+        .city-sao-leopoldo .city-header { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+        .city-campo-bom .city-header { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+        .city-ivoti .city-header { background: linear-gradient(135deg, #ec4899, #db2777); }
 
         .neighborhood-list {
             display: none;
-            max-height: 500px;
+            max-height: 450px;
             overflow-y: auto;
         }
 
@@ -113,20 +113,24 @@
             border-bottom: none;
         }
 
+        .neighborhood-item:nth-child(even) {
+            background-color: #fafafa;
+        }
+
         .neighborhood-info {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
         }
 
         .neighborhood-name {
-            font-weight: 500;
             flex: 1;
+            margin-right: 8px;
         }
 
         .price {
-            color: #059669;
+            color: var(--success);
             font-weight: bold;
             white-space: nowrap;
         }
@@ -140,16 +144,16 @@
 
         .btn-control {
             border: none;
-            width: 30px;
-            height: 30px;
+            width: 32px;
+            height: 32px;
             border-radius: 6px;
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            transition: transform 0.1s;
+            transition: transform 0.1s, opacity 0.2s;
         }
 
         .btn-control:active { transform: scale(0.9); }
@@ -158,11 +162,14 @@
         
         .counter {
             font-weight: bold;
-            min-width: 20px;
+            min-width: 24px;
             text-align: center;
+            font-size: 1rem;
         }
 
-        .counter.has-value { color: var(--primary); }
+        .counter.has-value {
+            color: var(--primary);
+        }
 
         /* Rodapé Fixo */
         .bottom-bar {
@@ -172,52 +179,117 @@
             width: 100%;
             background-color: white;
             box-shadow: 0 -4px 15px rgba(0,0,0,0.1);
-            padding: 15px 20px;
+            padding: 12px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             z-index: 1000;
         }
 
+        .bottom-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
         .total-display {
             font-size: 1.4rem;
             font-weight: bold;
+            color: var(--text-dark);
         }
 
-        .total-amount { color: var(--primary); }
-
-        .action-group {
-            display: flex;
-            gap: 8px;
+        .total-amount {
+            color: var(--primary);
         }
 
         .btn-action {
             border: none;
-            padding: 10px 15px;
+            padding: 10px 16px;
             border-radius: 8px;
             font-weight: bold;
             cursor: pointer;
-            font-size: 0.85rem;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .btn-collapse {
+            background-color: #6b7280;
             color: white;
         }
 
-        .btn-collapse { background-color: #6b7280; }
-        .btn-reset { background-color: #ef4444; }
+        .btn-collapse:hover {
+            background-color: #4b5563;
+        }
+
+        .btn-reset {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .btn-reset:hover {
+            background-color: #dc2626;
+        }
 
         /* Responsividade */
-        @media (max-width: 1100px) { .container { grid-template-columns: repeat(3, 1fr); } }
-        @media (max-width: 768px) { .container { grid-template-columns: repeat(2, 1fr); } }
-        @media (max-width: 480px) {
-            .container { grid-template-columns: 1fr; }
-            .bottom-bar { flex-direction: column; gap: 12px; }
-            body { padding-bottom: 140px; }
+        @media (max-width: 1200px) {
+            .container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 800px) {
+            .container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 550px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            
+            header h1 {
+                font-size: 1.2rem;
+            }
+
+            .bottom-bar {
+                flex-direction: column;
+                gap: 10px;
+                padding: 10px 15px;
+            }
+
+            .bottom-buttons {
+                width: 100%;
+                justify-content: center;
+            }
+
+            body { 
+                padding-bottom: 120px; 
+            }
+        }
+
+        /* Scrollbar estilizada */
+        .neighborhood-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .neighborhood-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .neighborhood-list::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+
+        .neighborhood-list::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
         }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>Calculadora de Entregas</h1>
+        <h1>🚚 Calculadora de Taxas de Entrega</h1>
     </header>
 
     <div class="container" id="app"></div>
