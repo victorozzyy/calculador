@@ -360,18 +360,52 @@
             color: var(--text-light);
         }
 
+        .history-item-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .history-btn {
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: transform 0.1s;
+        }
+
+        .history-btn:active {
+            transform: scale(0.9);
+        }
+
+        .history-btn-minus {
+            background-color: var(--danger);
+        }
+
+        .history-btn-plus {
+            background-color: var(--success);
+        }
+
         .history-item-count {
             font-weight: bold;
             color: var(--primary);
-            margin-right: 15px;
-            font-size: 1.1rem;
+            min-width: 30px;
+            text-align: center;
+            font-size: 1rem;
         }
 
         .history-item-value {
             font-weight: bold;
             color: var(--success);
-            min-width: 70px;
+            min-width: 75px;
             text-align: right;
+            margin-left: 10px;
         }
 
         .history-empty {
@@ -638,7 +672,7 @@
                 bairros: [
                     { nome: "Primavera", valor: 3.00 }, { nome: "Petrópolis", valor: 5.00 },
                     { nome: "Rincão", valor: 5.00 }, { nome: "Rio Branco", valor: 5.00 },
-                    { nome: "Vila Rosa", valor: 5.00 }, { nome: "Centro", valor: 6.00 },
+                    { nome: "Vila Rosa", valor: 5.00 }, { nome: "Centro (NH)", valor: 6.00 },
                     { nome: "Operário", valor: 6.00 }, { nome: "Ideal", valor: 6.00 },
                     { nome: "Pátria Nova", valor: 8.00 }, { nome: "Guarani", valor: 8.00 },
                     { nome: "Ouro Branco", valor: 8.00 }, { nome: "Liberdade", valor: 8.00 },
@@ -656,8 +690,8 @@
                     { nome: "Rincão dos Ilhéus", valor: 9.00 }, { nome: "Sol Nascente", valor: 9.00 },
                     { nome: "Encosta do Sol", valor: 10.00 }, { nome: "União", valor: 10.00 },
                     { nome: "Rincão Gaúcho", valor: 11.00 }, { nome: "Floresta", valor: 13.00 },
-                    { nome: "Centro", valor: 13.00 }, { nome: "Das Rosas", valor: 15.00 },
-                    { nome: "Bela Vista", valor: 15.00 }, { nome: "Lira", valor: 15.00 },
+                    { nome: "Centro (EV)", valor: 13.00 }, { nome: "Das Rosas", valor: 15.00 },
+                    { nome: "Bela Vista (EV)", valor: 15.00 }, { nome: "Lira", valor: 15.00 },
                     { nome: "Lago Azul", valor: 15.00 }, { nome: "Das Quintas", valor: 18.00 }
                 ]
             },
@@ -667,10 +701,10 @@
                     { nome: "Scharlau", valor: 11.00 }, { nome: "Santos Dumont", valor: 11.00 },
                     { nome: "Campina", valor: 13.00 }, { nome: "Rio dos Sinos", valor: 13.00 },
                     { nome: "São Miguel", valor: 13.00 }, { nome: "Arroio da Manteiga", valor: 13.00 },
-                    { nome: "Centro", valor: 15.00 }, { nome: "Fião", valor: 15.00 },
+                    { nome: "Centro (SL)", valor: 15.00 }, { nome: "Fião", valor: 15.00 },
                     { nome: "Cristo Rei", valor: 15.00 }, { nome: "Padre Reus", valor: 15.00 },
-                    { nome: "São José", valor: 15.00 }, { nome: "Morro do Espelho", valor: 15.00 },
-                    { nome: "Pinheiro", valor: 15.00 }, { nome: "Rio Branco", valor: 15.00 },
+                    { nome: "São José (SL)", valor: 15.00 }, { nome: "Morro do Espelho", valor: 15.00 },
+                    { nome: "Pinheiro", valor: 15.00 }, { nome: "Rio Branco (SL)", valor: 15.00 },
                     { nome: "Santa Tereza", valor: 15.00 }, { nome: "Jardim América", valor: 15.00 },
                     { nome: "Santo André", valor: 15.00 }, { nome: "Campestre", valor: 15.00 },
                     { nome: "Feitoria", valor: 15.00 }
@@ -681,10 +715,10 @@
                 bairros: [
                     { nome: "Imigrante", valor: 11.00 }, { nome: "Ipiranga", valor: 11.00 },
                     { nome: "Genuíno Sampaio", valor: 13.00 }, { nome: "Celeste", valor: 13.00 },
-                    { nome: "Centro", valor: 13.00 }, { nome: "Vila Dona Augusta", valor: 15.00 },
+                    { nome: "Centro (CB)", valor: 13.00 }, { nome: "Vila Dona Augusta", valor: 15.00 },
                     { nome: "Metzler", valor: 15.00 }, { nome: "Junchen", valor: 15.00 },
                     { nome: "Dona Leopoldina", valor: 15.00 }, { nome: "Dos Gringos", valor: 15.00 },
-                    { nome: "Paulista", valor: 17.00 }, { nome: "Bela Vista", valor: 17.00 },
+                    { nome: "Paulista", valor: 17.00 }, { nome: "Bela Vista (CB)", valor: 17.00 },
                     { nome: "Porto Blos", valor: 17.00 }
                 ]
             },
@@ -696,9 +730,11 @@
 
         let totalGeral = 0;
         let contagens = {};
-        let historico = []; // Array para armazenar histórico em ordem
+        let historico = [];
         let recognition;
         let isListening = false;
+        let lastVoiceInput = null;
+        let lastVoiceTime = 0;
 
         // Mapa de normalização de bairros
         const bairroMap = {};
@@ -720,6 +756,15 @@
                         cidade: cidade,
                         bairro: bairro
                     };
+                    
+                    // Adicionar versão sem sufixo para busca por voz
+                    const semSufixo = normalizado.replace(/\s*\(.*?\)\s*/g, '').trim();
+                    if (semSufixo !== normalizado && !bairroMap[semSufixo]) {
+                        bairroMap[semSufixo] = {
+                            cidade: cidade,
+                            bairro: bairro
+                        };
+                    }
                 });
             }
         }
@@ -762,9 +807,9 @@
                             <span class="price">R$ ${formatarMoeda(bairro.valor)}</span>
                         </div>
                         <div class="controls">
-                            <button class="btn-control btn-minus" onclick="alterarValor('${idUnico}', -1, ${bairro.valor}, '${bairro.nome}', '${cidade}')">−</button>
+                            <button class="btn-control btn-minus" onclick="alterarValor('${idUnico}', -1, ${bairro.valor}, '${bairro.nome.replace(/'/g, "\\'")}', '${cidade}')">−</button>
                             <span class="counter" id="count-${idUnico}">0</span>
-                            <button class="btn-control btn-plus" onclick="alterarValor('${idUnico}', 1, ${bairro.valor}, '${bairro.nome}', '${cidade}')">+</button>
+                            <button class="btn-control btn-plus" onclick="alterarValor('${idUnico}', 1, ${bairro.valor}, '${bairro.nome.replace(/'/g, "\\'")}', '${cidade}')">+</button>
                         </div>
                     `;
                     lista.appendChild(item);
@@ -810,7 +855,17 @@
         }
 
         function adicionarPorBairro(nomeBairro) {
+            // Prevenir duplicatas por voz (dentro de 2 segundos)
+            const agora = Date.now();
             const normalizado = normalizarTexto(nomeBairro);
+            
+            if (lastVoiceInput === normalizado && (agora - lastVoiceTime) < 2000) {
+                console.log('Entrada duplicada ignorada:', nomeBairro);
+                return false;
+            }
+            
+            lastVoiceInput = normalizado;
+            lastVoiceTime = agora;
             
             if (bairroMap[normalizado]) {
                 const { cidade, bairro } = bairroMap[normalizado];
@@ -835,6 +890,22 @@
             
             mostrarNotificacao(`❌ Bairro "${nomeBairro}" não encontrado`, 'error');
             return false;
+        }
+
+        function alterarNoHistorico(id, operacao) {
+            // Encontrar os dados do bairro
+            let bairroInfo = null;
+            for (const item of historico) {
+                if (item.id === id) {
+                    bairroInfo = item;
+                    break;
+                }
+            }
+            
+            if (!bairroInfo) return;
+            
+            alterarValor(id, operacao, bairroInfo.valor, bairroInfo.nome, bairroInfo.cidade);
+            mostrarHistorico(); // Atualizar o histórico
         }
 
         function mostrarHistorico() {
@@ -877,7 +948,11 @@
                                     <div class="history-item-name">${dados.nome}</div>
                                     <div class="history-item-city">${dados.cidade}</div>
                                 </div>
-                                <div class="history-item-count">×${dados.count}</div>
+                                <div class="history-item-controls">
+                                    <button class="history-btn history-btn-minus" onclick="alterarNoHistorico('${item.id}', -1)">−</button>
+                                    <div class="history-item-count">×${dados.count}</div>
+                                    <button class="history-btn history-btn-plus" onclick="alterarNoHistorico('${item.id}', 1)">+</button>
+                                </div>
                                 <div class="history-item-value">R$ ${formatarMoeda(subtotal)}</div>
                             </div>
                         `;
@@ -925,6 +1000,7 @@
             recognition.lang = 'pt-BR';
             recognition.continuous = true;
             recognition.interimResults = true;
+            recognition.maxAlternatives = 1;
 
             recognition.onstart = () => {
                 isListening = true;
@@ -969,14 +1045,18 @@
                 console.error('Erro no reconhecimento de voz:', event.error);
                 if (event.error === 'no-speech') {
                     document.getElementById('voiceStatus').textContent = '🔇 Nenhuma fala detectada';
-                } else {
+                } else if (event.error !== 'aborted') {
                     mostrarNotificacao('❌ Erro no reconhecimento de voz', 'error');
                 }
             };
 
             recognition.onend = () => {
                 if (isListening) {
-                    recognition.start(); // Reinicia automaticamente
+                    try {
+                        recognition.start(); // Reinicia automaticamente
+                    } catch (e) {
+                        console.log('Reconhecimento encerrado');
+                    }
                 }
             };
         }
@@ -986,7 +1066,11 @@
                 if (!recognition) {
                     iniciarReconhecimentoVoz();
                 }
-                recognition.start();
+                try {
+                    recognition.start();
+                } catch (e) {
+                    console.log('Reconhecimento já iniciado');
+                }
             } else {
                 stopVoiceRecognition();
             }
@@ -999,6 +1083,8 @@
             }
             document.getElementById('voiceBtn').classList.remove('listening');
             document.getElementById('voiceModal').classList.remove('active');
+            lastVoiceInput = null;
+            lastVoiceTime = 0;
         }
 
         function recolherTudo() {
@@ -1014,6 +1100,8 @@
             
             totalGeral = 0;
             historico = [];
+            lastVoiceInput = null;
+            lastVoiceTime = 0;
             document.getElementById('total-amount').innerText = '0,00';
             for (const id in contagens) {
                 contagens[id] = 0;
