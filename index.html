@@ -14,7 +14,7 @@
             --text-light: #6b7280;
             --danger: #ef4444;
             --success: #10b981;
-            --warning: #f59e0b;
+            --voice: #8b5cf6;
         }
 
         * {
@@ -171,276 +171,6 @@
             color: var(--primary);
         }
 
-        /* Botão de Voz */
-        .btn-voice {
-            position: fixed;
-            bottom: 100px;
-            right: 20px;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
-            color: white;
-            font-size: 1.8rem;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-            transition: all 0.3s;
-            z-index: 1001;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .btn-voice:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
-        }
-
-        .btn-voice.listening {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-
-        /* Modal de Voz */
-        .voice-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .voice-modal.active {
-            display: flex;
-        }
-
-        .voice-modal-content {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            text-align: center;
-            max-width: 400px;
-            width: 90%;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-        }
-
-        .voice-status {
-            font-size: 1.2rem;
-            margin-bottom: 15px;
-            color: var(--text-dark);
-        }
-
-        .voice-transcript {
-            background: var(--bg-color);
-            padding: 15px;
-            border-radius: 8px;
-            min-height: 60px;
-            margin-bottom: 20px;
-            font-style: italic;
-            color: var(--text-light);
-        }
-
-        .voice-transcript.active {
-            color: var(--text-dark);
-            font-weight: 500;
-        }
-
-        .btn-close-modal {
-            background: var(--danger);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .btn-close-modal:hover {
-            background: #dc2626;
-        }
-
-        /* Modal de Histórico */
-        .history-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .history-modal.active {
-            display: flex;
-        }
-
-        .history-modal-content {
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
-            max-width: 500px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-        }
-
-        .history-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid var(--bg-color);
-        }
-
-        .history-header h2 {
-            color: var(--text-dark);
-            font-size: 1.3rem;
-        }
-
-        .btn-close-history {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--text-light);
-            transition: color 0.2s;
-        }
-
-        .btn-close-history:hover {
-            color: var(--text-dark);
-        }
-
-        .history-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .history-item {
-            background: var(--bg-color);
-            padding: 12px 15px;
-            border-radius: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: background 0.2s;
-        }
-
-        .history-item:hover {
-            background: #e5e7eb;
-        }
-
-        .history-item-info {
-            flex: 1;
-        }
-
-        .history-item-name {
-            font-weight: 600;
-            color: var(--text-dark);
-            margin-bottom: 3px;
-        }
-
-        .history-item-city {
-            font-size: 0.85rem;
-            color: var(--text-light);
-        }
-
-        .history-item-controls {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .history-btn {
-            border: none;
-            width: 28px;
-            height: 28px;
-            border-radius: 5px;
-            font-size: 1.1rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            transition: transform 0.1s;
-        }
-
-        .history-btn:active {
-            transform: scale(0.9);
-        }
-
-        .history-btn-minus {
-            background-color: var(--danger);
-        }
-
-        .history-btn-plus {
-            background-color: var(--success);
-        }
-
-        .history-item-count {
-            font-weight: bold;
-            color: var(--primary);
-            min-width: 30px;
-            text-align: center;
-            font-size: 1rem;
-        }
-
-        .history-item-value {
-            font-weight: bold;
-            color: var(--success);
-            min-width: 75px;
-            text-align: right;
-            margin-left: 10px;
-        }
-
-        .history-empty {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--text-light);
-        }
-
-        .history-empty-icon {
-            font-size: 3rem;
-            margin-bottom: 10px;
-        }
-
-        .history-summary {
-            margin-top: 20px;
-            padding-top: 15px;
-            border-top: 2px solid var(--bg-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 1.1rem;
-        }
-
-        .history-summary-label {
-            font-weight: 600;
-            color: var(--text-dark);
-        }
-
-        .history-summary-total {
-            font-weight: bold;
-            color: var(--primary);
-            font-size: 1.3rem;
-        }
-
         /* Rodapé Fixo */
         .bottom-bar {
             position: fixed;
@@ -454,17 +184,21 @@
             justify-content: space-between;
             align-items: center;
             z-index: 1000;
+            flex-wrap: wrap;
+            gap: 8px;
         }
 
         .bottom-buttons {
             display: flex;
             gap: 10px;
+            flex-wrap: wrap;
         }
 
         .total-display {
             font-size: 1.4rem;
             font-weight: bold;
             color: var(--text-dark);
+            text-align: center;
         }
 
         .total-amount {
@@ -479,6 +213,10 @@
             cursor: pointer;
             transition: all 0.2s;
             font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
         }
 
         .btn-collapse {
@@ -490,15 +228,6 @@
             background-color: #4b5563;
         }
 
-        .btn-history {
-            background-color: var(--primary);
-            color: white;
-        }
-
-        .btn-history:hover {
-            background-color: var(--primary-hover);
-        }
-
         .btn-reset {
             background-color: var(--danger);
             color: white;
@@ -508,48 +237,116 @@
             background-color: #dc2626;
         }
 
-        /* Notificação */
-        .notification {
-            position: fixed;
-            top: 80px;
-            right: 20px;
-            background: white;
-            padding: 15px 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            z-index: 3000;
+        .btn-history {
+            background-color: #8b5cf6;
+            color: white;
+        }
+
+        .btn-history:hover {
+            background-color: #7c3aed;
+        }
+
+        .btn-voice {
+            background-color: var(--voice);
+            color: white;
+        }
+
+        .btn-voice:hover {
+            background-color: #7c3aed;
+        }
+
+        .listening {
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(139, 92, 246, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0); }
+        }
+
+        /* ===== Modal de Histórico ===== */
+        .modal {
             display: none;
+            position: fixed;
+            z-index: 3000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            justify-content: center;
             align-items: center;
-            gap: 10px;
-            max-width: 350px;
         }
 
-        .notification.show {
+        .modal-content {
+            background-color: var(--card-bg);
+            margin: 5% auto;
+            padding: 24px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #6b7280;
+        }
+
+        .modal-close:hover {
+            color: var(--danger);
+        }
+
+        .historico-lista {
+            margin-top: 10px;
+        }
+
+        .historico-item {
+            padding: 10px 8px;
+            border-bottom: 1px solid #e5e7eb;
             display: flex;
-            animation: slideIn 0.3s ease-out;
+            flex-direction: column;
+            gap: 8px;
         }
 
-        .notification.success {
-            border-left: 4px solid var(--success);
+        .historico-item:last-child {
+            border-bottom: none;
         }
 
-        .notification.error {
-            border-left: 4px solid var(--danger);
+        .historico-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            font-weight: 500;
         }
 
-        .notification.warning {
-            border-left: 4px solid var(--warning);
+        .historico-header small {
+            font-size: 0.75rem;
+            color: #6b7280;
         }
 
-        @keyframes slideIn {
-            from {
-                transform: translateX(400px);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
+        .historico-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .counter-historico {
+            font-weight: bold;
+            min-width: 24px;
+            text-align: center;
+            font-size: 1rem;
+            color: var(--primary);
         }
 
         /* Responsividade */
@@ -583,44 +380,28 @@
             .bottom-buttons {
                 width: 100%;
                 justify-content: center;
-                flex-wrap: wrap;
             }
 
             body { 
-                padding-bottom: 140px; 
-            }
-
-            .btn-voice {
-                bottom: 150px;
-                right: 15px;
-            }
-
-            .notification {
-                max-width: 90%;
-                right: 5%;
+                padding-bottom: 120px; 
             }
         }
 
-        /* Scrollbar estilizada */
+        /* Scrollbar */
         .neighborhood-list::-webkit-scrollbar,
-        .history-modal-content::-webkit-scrollbar {
+        .modal-content::-webkit-scrollbar {
             width: 6px;
         }
 
         .neighborhood-list::-webkit-scrollbar-track,
-        .history-modal-content::-webkit-scrollbar-track {
+        .modal-content::-webkit-scrollbar-track {
             background: #f1f1f1;
         }
 
         .neighborhood-list::-webkit-scrollbar-thumb,
-        .history-modal-content::-webkit-scrollbar-thumb {
+        .modal-content::-webkit-scrollbar-thumb {
             background: #c1c1c1;
             border-radius: 3px;
-        }
-
-        .neighborhood-list::-webkit-scrollbar-thumb:hover,
-        .history-modal-content::-webkit-scrollbar-thumb:hover {
-            background: #a1a1a1;
         }
     </style>
 </head>
@@ -632,46 +413,32 @@
 
     <div class="container" id="app"></div>
 
-    <!-- Botão de Voz -->
-    <button class="btn-voice" id="voiceBtn" onclick="toggleVoiceRecognition()" title="Adicionar por voz">
-        🎤
-    </button>
-
-    <!-- Modal de Voz -->
-    <div class="voice-modal" id="voiceModal">
-        <div class="voice-modal-content">
-            <div class="voice-status" id="voiceStatus">🎤 Ouvindo...</div>
-            <div class="voice-transcript" id="voiceTranscript">Diga o nome do bairro...</div>
-            <button class="btn-close-modal" onclick="stopVoiceRecognition()">Parar</button>
-        </div>
-    </div>
-
     <!-- Modal de Histórico -->
-    <div class="history-modal" id="historyModal">
-        <div class="history-modal-content">
-            <div class="history-header">
-                <h2>📋 Bairros Adicionados</h2>
-                <button class="btn-close-history" onclick="fecharHistorico()">✕</button>
-            </div>
-            <div class="history-list" id="historyList">
-                <!-- Será preenchido dinamicamente -->
-            </div>
+    <div id="historicoModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="fecharHistorico()">&times;</span>
+            <h2>📋 Bairros Adicionados (Ordem de Adição)</h2>
+            <div id="historicoLista" class="historico-lista"></div>
         </div>
-    </div>
-
-    <!-- Notificação -->
-    <div class="notification" id="notification">
-        <span id="notificationText"></span>
     </div>
 
     <div class="bottom-bar">
-        <div class="bottom-buttons">
-            <button class="btn-action btn-collapse" onclick="recolherTudo()">Recolher</button>
-            <button class="btn-action btn-history" onclick="mostrarHistorico()">📋 Histórico</button>
-            <button class="btn-action btn-reset" onclick="resetarTudo()">Limpar</button>
-        </div>
         <div class="total-display">
             Total: R$ <span id="total-amount" class="total-amount">0,00</span>
+        </div>
+        <div class="bottom-buttons">
+            <button class="btn-action btn-collapse" onclick="recolherTudo()">
+                📏 Recolher
+            </button>
+            <button class="btn-action btn-history" onclick="mostrarHistorico()">
+                📋 Histórico
+            </button>
+            <button class="btn-action btn-reset" onclick="resetarTudo()">
+                ❌ Limpar
+            </button>
+            <button class="btn-action btn-voice" onclick="iniciarReconhecimentoVoz()" id="btnVoz">
+                🎤 Voz
+            </button>
         </div>
     </div>
 
@@ -680,55 +447,88 @@
             "Novo Hamburgo": {
                 classe: "city-novo-hamburgo",
                 bairros: [
-                    { nome: "Primavera", valor: 3.00 }, { nome: "Petrópolis", valor: 5.00 },
-                    { nome: "Rincão", valor: 5.00 }, { nome: "Rio Branco (NH)", valor: 5.00 },
-                    { nome: "Vila Rosa", valor: 5.00 }, { nome: "Centro (NH)", valor: 6.00 },
-                    { nome: "Operário", valor: 6.00 }, { nome: "Ideal", valor: 6.00 },
-                    { nome: "Pátria Nova", valor: 8.00 }, { nome: "Guarani", valor: 8.00 },
-                    { nome: "Ouro Branco", valor: 8.00 }, { nome: "Liberdade", valor: 8.00 },
-                    { nome: "Boa Vista (NH)", valor: 8.00 }, { nome: "Hamburgo Velho", valor: 8.00 },
-                    { nome: "Vila Nova", valor: 8.00 }, { nome: "Jardim Mauá", valor: 8.00 },
-                    { nome: "Industrial", valor: 8.00 }, { nome: "Boa Saúde", valor: 8.00 },
-                    { nome: "Canudos", valor: 10.00 }, { nome: "Mundo Novo", valor: 10.00 },
-                    { nome: "Santo Afonso", valor: 10.00 }, { nome: "São José (NH)", valor: 10.00 },
-                    { nome: "São Jorge", valor: 10.00 }, { nome: "Roselândia", valor: 10.00 }
+                    { nome: "Primavera", valor: 3.00 }, 
+                    { nome: "Petrópolis", valor: 5.00 },
+                    { nome: "Rincão", valor: 5.00 }, 
+                    { nome: "Rio Branco", valor: 5.00 },
+                    { nome: "Vila Rosa", valor: 5.00 }, 
+                    { nome: "Centro", valor: 6.00 },
+                    { nome: "Operário", valor: 6.00 }, 
+                    { nome: "Ideal", valor: 6.00 },
+                    { nome: "Pátria Nova", valor: 8.00 }, 
+                    { nome: "Guarani", valor: 8.00 },
+                    { nome: "Ouro Branco", valor: 8.00 }, 
+                    { nome: "Liberdade", valor: 8.00 },
+                    { nome: "Boa Vista", valor: 8.00 }, 
+                    { nome: "Hamburgo Velho", valor: 8.00 },
+                    { nome: "Vila Nova", valor: 8.00 }, 
+                    { nome: "Jardim Mauá", valor: 8.00 },
+                    { nome: "Industrial", valor: 8.00 }, 
+                    { nome: "Boa Saúde", valor: 8.00 },
+                    { nome: "Canudos", valor: 10.00 }, 
+                    { nome: "Mundo Novo", valor: 10.00 },
+                    { nome: "Santo Afonso", valor: 10.00 }, 
+                    { nome: "São José", valor: 10.00 },
+                    { nome: "São Jorge", valor: 10.00 }, 
+                    { nome: "Roselândia", valor: 10.00 }
                 ]
             },
             "Estância Velha": {
                 classe: "city-estancia-velha",
                 bairros: [
-                    { nome: "Rincão dos Ilhéus", valor: 9.00 }, { nome: "Sol Nascente", valor: 9.00 },
-                    { nome: "Encosta do Sol", valor: 10.00 }, { nome: "União", valor: 10.00 },
-                    { nome: "Rincão Gaúcho", valor: 11.00 }, { nome: "Floresta", valor: 13.00 },
-                    { nome: "Centro (EV)", valor: 13.00 }, { nome: "Das Rosas", valor: 15.00 },
-                    { nome: "Bela Vista (EV)", valor: 15.00 }, { nome: "Lira", valor: 15.00 },
-                    { nome: "Lago Azul", valor: 15.00 }, { nome: "Das Quintas", valor: 18.00 }
+                    { nome: "Rincão dos Ilhéus", valor: 9.00 }, 
+                    { nome: "Sol Nascente", valor: 9.00 },
+                    { nome: "Encosta do Sol", valor: 10.00 }, 
+                    { nome: "União", valor: 10.00 },
+                    { nome: "Rincão Gaúcho", valor: 11.00 }, 
+                    { nome: "Floresta", valor: 13.00 },
+                    { nome: "Centro", valor: 13.00 }, 
+                    { nome: "Das Rosas", valor: 15.00 },
+                    { nome: "Bela Vista", valor: 15.00 }, 
+                    { nome: "Lira", valor: 15.00 },
+                    { nome: "Lago Azul", valor: 15.00 }, 
+                    { nome: "Das Quintas", valor: 18.00 }
                 ]
             },
             "São Leopoldo": {
                 classe: "city-sao-leopoldo",
                 bairros: [
-                    { nome: "Scharlau", valor: 11.00 }, { nome: "Santos Dumont", valor: 11.00 },
-                    { nome: "Campina", valor: 13.00 }, { nome: "Rio dos Sinos", valor: 13.00 },
-                    { nome: "São Miguel", valor: 13.00 }, { nome: "Arroio da Manteiga", valor: 13.00 },
-                    { nome: "Centro (SL)", valor: 15.00 }, { nome: "Fião", valor: 15.00 },
-                    { nome: "Cristo Rei", valor: 15.00 }, { nome: "Padre Reus", valor: 15.00 },
-                    { nome: "São José (SL)", valor: 15.00 }, { nome: "Morro do Espelho", valor: 15.00 },
-                    { nome: "Pinheiro", valor: 15.00 }, { nome: "Rio Branco (SL)", valor: 15.00 },
-                    { nome: "Santa Tereza", valor: 15.00 }, { nome: "Jardim América", valor: 15.00 },
-                    { nome: "Santo André", valor: 15.00 }, { nome: "Campestre", valor: 15.00 },
+                    { nome: "Scharlau", valor: 11.00 }, 
+                    { nome: "Santos Dumont", valor: 11.00 },
+                    { nome: "Campina", valor: 13.00 }, 
+                    { nome: "Rio dos Sinos", valor: 13.00 },
+                    { nome: "São Miguel", valor: 13.00 }, 
+                    { nome: "Arroio da Manteiga", valor: 13.00 },
+                    { nome: "Centro", valor: 15.00 }, 
+                    { nome: "Fião", valor: 15.00 },
+                    { nome: "Cristo Rei", valor: 15.00 }, 
+                    { nome: "Padre Reus", valor: 15.00 },
+                    { nome: "São José", valor: 15.00 }, 
+                    { nome: "Morro do Espelho", valor: 15.00 },
+                    { nome: "Pinheiro", valor: 15.00 }, 
+                    { nome: "Rio Branco", valor: 15.00 },
+                    { nome: "Santa Tereza", valor: 15.00 }, 
+                    { nome: "Jardim América", valor: 15.00 },
+                    { nome: "Santo André", valor: 15.00 }, 
+                    { nome: "Campestre", valor: 15.00 },
                     { nome: "Feitoria", valor: 15.00 }
                 ]
             },
             "Campo Bom": {
                 classe: "city-campo-bom",
                 bairros: [
-                    { nome: "Imigrante", valor: 11.00 }, { nome: "Ipiranga", valor: 11.00 },
-                    { nome: "Genuíno Sampaio", valor: 13.00 }, { nome: "Celeste", valor: 13.00 },
-                    { nome: "Centro (CB)", valor: 13.00 }, { nome: "Vila Dona Augusta", valor: 15.00 },
-                    { nome: "Metzler", valor: 15.00 }, { nome: "Junchen", valor: 15.00 },
-                    { nome: "Dona Leopoldina", valor: 15.00 }, { nome: "Dos Gringos", valor: 15.00 },
-                    { nome: "Paulista", valor: 17.00 }, { nome: "Bela Vista (CB)", valor: 17.00 },
+                    { nome: "Imigrante", valor: 11.00 }, 
+                    { nome: "Ipiranga", valor: 11.00 },
+                    { nome: "Genuíno Sampaio", valor: 13.00 }, 
+                    { nome: "Celeste", valor: 13.00 },
+                    { nome: "Centro", valor: 13.00 }, 
+                    { nome: "Vila Dona Augusta", valor: 15.00 },
+                    { nome: "Metzler", valor: 15.00 }, 
+                    { nome: "Junchen", valor: 15.00 },
+                    { nome: "Dona Leopoldina", valor: 15.00 }, 
+                    { nome: "Dos Gringos", valor: 15.00 },
+                    { nome: "Paulista", valor: 17.00 }, 
+                    { nome: "Bela Vista", valor: 17.00 },
                     { nome: "Porto Blos", valor: 17.00 }
                 ]
             },
@@ -740,49 +540,15 @@
 
         let totalGeral = 0;
         let contagens = {};
-        let historico = [];
-        let recognition;
-        let isListening = false;
-        let lastVoiceInput = null;
-        let lastVoiceTime = 0;
+        let ordemAdicao = []; // Ordem de adição (primeira vez que passa de 0)
+        let isRecognizing = false; // Flag para evitar voz duplicada
 
-        // Mapa de normalização de bairros
-        const bairroMap = {};
-
-        function normalizarTexto(texto) {
-            return texto
-                .toLowerCase()
-                .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, '')
-                .replace(/[^a-z0-9\s]/g, '')
-                .trim();
-        }
-
-        function construirMapaBairros() {
-            for (const cidade in dadosEntregas) {
-                dadosEntregas[cidade].bairros.forEach(bairro => {
-                    const normalizado = normalizarTexto(bairro.nome);
-                    
-                    // Não adicionar bairros duplicados no mapa global
-                    const ehDuplicado = normalizado.includes('centro') || 
-                                       normalizado.includes('belavista') || 
-                                       normalizado.includes('riobranco') || 
-                                       normalizado.includes('saojose');
-                    
-                    if (!ehDuplicado) {
-                        bairroMap[normalizado] = {
-                            cidade: cidade,
-                            bairro: bairro
-                        };
-                    }
-                });
-            }
-        }
-
+        // Formatação de moeda
         function formatarMoeda(valor) {
             return valor.toFixed(2).replace('.', ',');
         }
 
+        // Renderização dos cards das cidades
         function renderizarApp() {
             const app = document.getElementById('app');
             app.innerHTML = '';
@@ -790,6 +556,7 @@
             for (const cidade in dadosEntregas) {
                 const dados = dadosEntregas[cidade];
                 
+                // Ordena alfabeticamente os bairros
                 const bairrosOrdenados = [...dados.bairros].sort((a, b) => 
                     a.nome.localeCompare(b.nome, 'pt-BR', { sensitivity: 'base' })
                 );
@@ -817,9 +584,9 @@
                             <span class="price">R$ ${formatarMoeda(bairro.valor)}</span>
                         </div>
                         <div class="controls">
-                            <button class="btn-control btn-minus" onclick="alterarValor('${idUnico}', -1, ${bairro.valor}, '${bairro.nome.replace(/'/g, "\\'")}', '${cidade}')">−</button>
+                            <button class="btn-control btn-minus" onclick="alterarValor('${idUnico}', -1, ${bairro.valor}, '${cidade}', '${bairro.nome}')">−</button>
                             <span class="counter" id="count-${idUnico}">0</span>
-                            <button class="btn-control btn-plus" onclick="alterarValor('${idUnico}', 1, ${bairro.valor}, '${bairro.nome.replace(/'/g, "\\'")}', '${cidade}')">+</button>
+                            <button class="btn-control btn-plus" onclick="alterarValor('${idUnico}', 1, ${bairro.valor}, '${cidade}', '${bairro.nome}')">+</button>
                         </div>
                     `;
                     lista.appendChild(item);
@@ -831,437 +598,213 @@
             }
         }
 
-        function alterarValor(id, operacao, valorBairro, nomeBairro, cidade) {
+        // Alterar quantidade (soma/subtrai)
+        function alterarValor(id, operacao, valorBairro, cidade, bairroNome) {
             if (operacao === -1 && contagens[id] === 0) return;
 
+            const countAntigo = contagens[id];
             contagens[id] += operacao;
+            
             const counterElement = document.getElementById(`count-${id}`);
             counterElement.innerText = contagens[id];
             
-            contagens[id] > 0 ? counterElement.classList.add('has-value') : counterElement.classList.remove('has-value');
+            contagens[id] > 0 
+                ? counterElement.classList.add('has-value') 
+                : counterElement.classList.remove('has-value');
+
+            // Registra na ordem de adição (apenas se foi de 0 para >0)
+            if (operacao === 1 && countAntigo === 0) {
+                ordemAdicao.push({ id, cidade, bairroNome, valor: valorBairro });
+            }
 
             totalGeral += (operacao * valorBairro);
             totalGeral = Math.max(0, Math.round(totalGeral * 100) / 100);
-
             document.getElementById('total-amount').innerText = formatarMoeda(totalGeral);
+            
+            atualizarHistoricoAberto(); // Atualiza se o modal estiver aberto
+        }
 
-            // Atualizar histórico
-            if (operacao === 1) {
-                historico.push({
-                    nome: nomeBairro,
-                    cidade: cidade,
-                    valor: valorBairro,
-                    id: id
-                });
-            } else if (operacao === -1) {
-                // Remove a última ocorrência deste bairro
-                for (let i = historico.length - 1; i >= 0; i--) {
-                    if (historico[i].id === id) {
-                        historico.splice(i, 1);
+        // ===== RECONHECIMENTO DE VOZ =====
+        function iniciarReconhecimentoVoz() {
+            if (isRecognizing) return; // Bloqueia múltiplas execuções
+            isRecognizing = true;
+
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) {
+                alert("Navegador não suporta reconhecimento de voz. Use Chrome, Edge ou Safari.");
+                isRecognizing = false;
+                return;
+            }
+
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'pt-BR';
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+
+            const btnVoz = document.getElementById('btnVoz');
+            btnVoz.classList.add('listening');
+
+            recognition.onstart = () => console.log("Ouvindo...");
+
+            recognition.onerror = (event) => {
+                console.error("Erro:", event.error);
+                isRecognizing = false;
+                btnVoz.classList.remove('listening');
+            };
+
+            recognition.onend = () => {
+                isRecognizing = false;
+                btnVoz.classList.remove('listening');
+            };
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript.toLowerCase().trim();
+                console.log("Comando:", transcript);
+                processarComandoVoz(transcript);
+            };
+
+            recognition.start();
+        }
+
+        // Processa comandos de voz
+        function processarComandoVoz(comando) {
+            // Extrai quantidade (ex: "5", "três", "10,50")
+            let quantidade = 1;
+            const numMatch = comando.match(/(\d+)(?:[,.](\d{1,2}))|\b(um|dois|três|quatro|cinco|seis|sete|oito|nove|dez)\b/gi);
+            
+            if (numMatch) {
+                const numStr = numMatch[0].replace('.', ',');
+                if (!isNaN(numStr)) {
+                    quantidade = parseFloat(numStr) || 1;
+                } else {
+                    // Conversão por extenso (simplificado)
+                    const numerosExtenso = {
+                        'um': 1, 'dois': 2, 'três': 3, 'tres': 3, 'quatro': 4,
+                        'cinco': 5, 'seis': 6, 'sete': 7, 'oito': 8, 'nove': 9,
+                        'dez': 10
+                    };
+                    quantidade = numerosExtenso[numStr] || 1;
+                }
+            }
+
+            // Procura por cidade e bairro no comando
+            let cidadeAlvo = null;
+            let bairroAlvo = null;
+
+            // 1. Verifica se tem "de [cidade]"
+            for (const cidade of Object.keys(dadosEntregas)) {
+                const nomeCidade = cidade.toLowerCase();
+                if (comando.includes(`de ${nomeCidade}`) || comando.includes(nomeCidade)) {
+                    cidadeAlvo = cidade;
+                    break;
+                }
+            }
+
+            // 2. Se encontrou cidade, procura o bairro dentro dela
+            if (cidadeAlvo) {
+                const bairros = dadosEntregas[cidadeAlvo].bairros;
+                for (const b of bairros) {
+                    const nomeBairro = b.nome.toLowerCase();
+                    if (comando.includes(nomeBairro)) {
+                        bairroAlvo = b;
                         break;
                     }
                 }
-            }
-        }
-
-        function adicionarPorBairro(nomeBairro) {
-            // Prevenir duplicatas por voz (dentro de 2 segundos)
-            const agora = Date.now();
-            const normalizado = normalizarTexto(nomeBairro);
-            
-            if (lastVoiceInput === normalizado && (agora - lastVoiceTime) < 2000) {
-                console.log('Entrada duplicada ignorada:', nomeBairro);
-                return false;
-            }
-            
-            lastVoiceInput = normalizado;
-            lastVoiceTime = agora;
-            
-            // Busca exata primeiro
-            if (bairroMap[normalizado]) {
-                const { cidade, bairro } = bairroMap[normalizado];
-                const idUnico = `${cidade}-${bairro.nome}`.replace(/\s+/g, '_');
-                
-                alterarValor(idUnico, 1, bairro.valor, bairro.nome, cidade);
-                mostrarNotificacao(`✅ ${bairro.nome} adicionado!`, 'success');
-                return true;
-            }
-            
-            // Busca por contexto de cidade + bairro
-            const possiveisCombinacoes = [
-                // "centro de novo hamburgo", "centro novo hamburgo"
-                /(?:centro|bela\s*vista|rio\s*branco|sao\s*jose)\s+(?:de\s+)?(.+)/i,
-                // "novo hamburgo centro"
-                /(.+)\s+(?:centro|bela\s*vista|rio\s*branco|sao\s*jose)/i
-            ];
-            
-            for (const regex of possiveisCombinacoes) {
-                const match = nomeBairro.match(regex);
-                if (match) {
-                    const cidadeNome = normalizarTexto(match[1]);
-                    
-                    // Mapa de cidades normalizadas
-                    const cidadeMap = {
-                        'novohamburgo': 'Novo Hamburgo',
-                        'nh': 'Novo Hamburgo',
-                        'estanciavelha': 'Estância Velha',
-                        'ev': 'Estância Velha',
-                        'saoleopoldo': 'São Leopoldo',
-                        'sl': 'São Leopoldo',
-                        'campobom': 'Campo Bom',
-                        'cb': 'Campo Bom'
-                    };
-                    
-                    const cidadeReal = cidadeMap[cidadeNome];
-                    
-                    if (cidadeReal && dadosEntregas[cidadeReal]) {
-                        // Identificar qual bairro duplicado foi mencionado
-                        const textoBaixo = nomeBairro.toLowerCase();
-                        const bairroDuplicado = textoBaixo.includes('centro') ? 'centro' :
-                                               textoBaixo.includes('bela') && textoBaixo.includes('vista') ? 'belavista' :
-                                               textoBaixo.includes('rio') && textoBaixo.includes('branco') ? 'riobranco' :
-                                               textoBaixo.includes('sao') && textoBaixo.includes('jose') ? 'saojose' : null;
-                        
-                        if (bairroDuplicado) {
-                            // Buscar o bairro específico na cidade
-                            const bairroEncontrado = dadosEntregas[cidadeReal].bairros.find(b => 
-                                normalizarTexto(b.nome).includes(bairroDuplicado)
-                            );
-                            
-                            if (bairroEncontrado) {
-                                const idUnico = `${cidadeReal}-${bairroEncontrado.nome}`.replace(/\s+/g, '_');
-                                alterarValor(idUnico, 1, bairroEncontrado.valor, bairroEncontrado.nome, cidadeReal);
-                                mostrarNotificacao(`✅ ${bairroEncontrado.nome} adicionado!`, 'success');
-                                return true;
-                            }
+            } else {
+                // 3. Se não tem cidade, procura o bairro em TODAS as cidades (pega o 1º)
+                OUTER: for (const cidade of Object.keys(dadosEntregas)) {
+                    for (const b of dadosEntregas[cidade].bairros) {
+                        const nomeBairro = b.nome.toLowerCase();
+                        if (comando.includes(nomeBairro)) {
+                            cidadeAlvo = cidade;
+                            bairroAlvo = b;
+                            break OUTER;
                         }
                     }
                 }
             }
-            
-            // Busca parcial genérica
-            const resultados = [];
-            for (const key in bairroMap) {
-                if (key.includes(normalizado) || normalizado.includes(key)) {
-                    resultados.push(bairroMap[key]);
-                }
-            }
-            
-            // Verificar bairros duplicados manualmente
-            const bairrosDuplicados = [];
-            const textoBaixo = nomeBairro.toLowerCase();
-            
-            if (textoBaixo.includes('centro') || normalizado === 'centro') {
-                for (const cidade in dadosEntregas) {
-                    const bairro = dadosEntregas[cidade].bairros.find(b => 
-                        normalizarTexto(b.nome).includes('centro')
-                    );
-                    if (bairro) {
-                        bairrosDuplicados.push({ cidade, bairro });
-                    }
-                }
-            } else if ((textoBaixo.includes('bela') && textoBaixo.includes('vista')) || normalizado === 'belavista') {
-                for (const cidade in dadosEntregas) {
-                    const bairro = dadosEntregas[cidade].bairros.find(b => 
-                        normalizarTexto(b.nome).includes('belavista')
-                    );
-                    if (bairro) {
-                        bairrosDuplicados.push({ cidade, bairro });
-                    }
-                }
-            } else if ((textoBaixo.includes('rio') && textoBaixo.includes('branco')) || normalizado === 'riobranco') {
-                for (const cidade in dadosEntregas) {
-                    const bairro = dadosEntregas[cidade].bairros.find(b => 
-                        normalizarTexto(b.nome).includes('riobranco')
-                    );
-                    if (bairro) {
-                        bairrosDuplicados.push({ cidade, bairro });
-                    }
-                }
-            } else if ((textoBaixo.includes('sao') && textoBaixo.includes('jose')) || normalizado === 'saojose') {
-                for (const cidade in dadosEntregas) {
-                    const bairro = dadosEntregas[cidade].bairros.find(b => 
-                        normalizarTexto(b.nome).includes('saojose')
-                    );
-                    if (bairro) {
-                        bairrosDuplicados.push({ cidade, bairro });
-                    }
-                }
-            }
-            
-            // Se encontrou bairros duplicados, mostrar aviso
-            if (bairrosDuplicados.length > 1) {
-                const listaCidades = bairrosDuplicados.map(r => r.cidade).join(', ');
-                mostrarNotificacao(`⚠️ "${nomeBairro}" existe em: ${listaCidades}. Diga a cidade também (ex: "Centro Novo Hamburgo")`, 'warning');
-                return false;
-            }
-            
-            // Se encontrou apenas 1 resultado duplicado
-            if (bairrosDuplicados.length === 1) {
-                const { cidade, bairro } = bairrosDuplicados[0];
-                const idUnico = `${cidade}-${bairro.nome}`.replace(/\s+/g, '_');
-                
-                alterarValor(idUnico, 1, bairro.valor, bairro.nome, cidade);
-                mostrarNotificacao(`✅ ${bairro.nome} adicionado!`, 'success');
-                return true;
-            }
-            
-            // Se encontrou apenas 1 resultado normal, adiciona
-            if (resultados.length === 1) {
-                const { cidade, bairro } = resultados[0];
-                const idUnico = `${cidade}-${bairro.nome}`.replace(/\s+/g, '_');
-                
-                alterarValor(idUnico, 1, bairro.valor, bairro.nome, cidade);
-                mostrarNotificacao(`✅ ${bairro.nome} adicionado!`, 'success');
-                return true;
-            }
-            
-            // Se encontrou múltiplos, mostra ambiguidade
-            if (resultados.length > 1) {
-                const listaBairros = resultados.map(r => `${r.bairro.nome} (${r.cidade})`).join(', ');
-                mostrarNotificacao(`⚠️ "${nomeBairro}" pode ser: ${listaBairros}. Seja mais específico.`, 'warning');
-                return false;
-            }
-            
-            mostrarNotificacao(`❌ Bairro "${nomeBairro}" não encontrado`, 'error');
-            return false;
-        }
 
-        function alterarNoHistorico(id, operacao) {
-            // Encontrar os dados do bairro
-            let bairroInfo = null;
-            for (const item of historico) {
-                if (item.id === id) {
-                    bairroInfo = item;
-                    break;
-                }
-            }
-            
-            if (!bairroInfo) return;
-            
-            alterarValor(id, operacao, bairroInfo.valor, bairroInfo.nome, bairroInfo.cidade);
-            mostrarHistorico(); // Atualizar o histórico
-        }
-
-        function mostrarHistorico() {
-            const modal = document.getElementById('historyModal');
-            const listElement = document.getElementById('historyList');
-            
-            if (historico.length === 0) {
-                listElement.innerHTML = `
-                    <div class="history-empty">
-                        <div class="history-empty-icon">📭</div>
-                        <p>Nenhum bairro adicionado ainda</p>
-                    </div>
-                `;
+            // Se encontrou, adiciona
+            if (bairroAlvo && cidadeAlvo) {
+                const id = `${cidadeAlvo}-${bairroAlvo.nome}`.replace(/\s+/g, '_');
+                alterarValor(id, quantidade, bairroAlvo.valor, cidadeAlvo, bairroAlvo.nome);
             } else {
-                // Agrupar e contar bairros
-                const agrupado = {};
-                historico.forEach(item => {
-                    if (!agrupado[item.id]) {
-                        agrupado[item.id] = {
-                            nome: item.nome,
-                            cidade: item.cidade,
-                            valor: item.valor,
-                            count: 0
-                        };
-                    }
-                    agrupado[item.id].count++;
-                });
-
-                let html = '';
-                // Mostrar em ordem de adição (primeira ocorrência)
-                const idsVistos = new Set();
-                historico.forEach(item => {
-                    if (!idsVistos.has(item.id)) {
-                        idsVistos.add(item.id);
-                        const dados = agrupado[item.id];
-                        const subtotal = dados.valor * dados.count;
-                        html += `
-                            <div class="history-item">
-                                <div class="history-item-info">
-                                    <div class="history-item-name">${dados.nome}</div>
-                                    <div class="history-item-city">${dados.cidade}</div>
-                                </div>
-                                <div class="history-item-controls">
-                                    <button class="history-btn history-btn-minus" onclick="alterarNoHistorico('${item.id}', -1)">−</button>
-                                    <div class="history-item-count">×${dados.count}</div>
-                                    <button class="history-btn history-btn-plus" onclick="alterarNoHistorico('${item.id}', 1)">+</button>
-                                </div>
-                                <div class="history-item-value">R$ ${formatarMoeda(subtotal)}</div>
-                            </div>
-                        `;
-                    }
-                });
-
-                html += `
-                    <div class="history-summary">
-                        <span class="history-summary-label">Total Geral:</span>
-                        <span class="history-summary-total">R$ ${formatarMoeda(totalGeral)}</span>
-                    </div>
-                `;
-
-                listElement.innerHTML = html;
+                alert("Bairro não encontrado. Tente: 'cinco centro de novo hamburgo' ou '10 ivoti'.");
             }
-            
-            modal.classList.add('active');
+        }
+
+        // ===== HISTÓRICO =====
+        function mostrarHistorico() {
+            const modal = document.getElementById('historicoModal');
+            const lista = document.getElementById('historicoLista');
+            lista.innerHTML = '';
+
+            // Filtra apenas itens com quantidade > 0 (na ordem de adição)
+            const itensAtivos = ordemAdicao.filter(item => contagens[item.id] > 0);
+
+            if (itensAtivos.length === 0) {
+                lista.innerHTML = '<p style="text-align:center; color:#6b7280; font-style:italic">Nenhum bairro adicionado.</p>';
+            } else {
+                itensAtivos.forEach(item => {
+                    const qtd = contagens[item.id];
+                    const totalBairro = qtd * item.valor;
+                    
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'historico-item';
+                    itemDiv.innerHTML = `
+                        <div class="historico-header">
+                            <span>${item.bairroNome}<br><small>${item.cidade}</small></span>
+                            <span>R$ ${formatarMoeda(totalBairro)}</span>
+                        </div>
+                        <div class="historico-controls">
+                            <button class="btn-control btn-minus" 
+                                onclick="alterarValor('${item.id}', -1, ${item.valor}, '${item.cidade}', '${item.bairroNome}')">−</button>
+                            <span class="counter-historico">${qtd}</span>
+                            <button class="btn-control btn-plus" 
+                                onclick="alterarValor('${item.id}', 1, ${item.valor}, '${item.cidade}', '${item.bairroNome}')">+</button>
+                        </div>
+                    `;
+                    lista.appendChild(itemDiv);
+                });
+            }
+
+            modal.style.display = 'flex';
         }
 
         function fecharHistorico() {
-            document.getElementById('historyModal').classList.remove('active');
+            document.getElementById('historicoModal').style.display = 'none';
         }
 
-        function mostrarNotificacao(texto, tipo) {
-            const notification = document.getElementById('notification');
-            const notificationText = document.getElementById('notificationText');
-            
-            notificationText.textContent = texto;
-            notification.className = `notification ${tipo} show`;
-            
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, tipo === 'warning' ? 5000 : 3000); // Avisos ficam 5 segundos
-        }
-
-        function iniciarReconhecimentoVoz() {
-            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-                mostrarNotificacao('❌ Seu navegador não suporta reconhecimento de voz', 'error');
-                return;
-            }
-
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            recognition = new SpeechRecognition();
-            
-            recognition.lang = 'pt-BR';
-            recognition.continuous = true;
-            recognition.interimResults = true;
-            recognition.maxAlternatives = 1;
-
-            recognition.onstart = () => {
-                isListening = true;
-                document.getElementById('voiceBtn').classList.add('listening');
-                document.getElementById('voiceModal').classList.add('active');
-                document.getElementById('voiceStatus').textContent = '🎤 Ouvindo...';
-                document.getElementById('voiceTranscript').textContent = 'Diga o nome do bairro...';
-            };
-
-            recognition.onresult = (event) => {
-                let interimTranscript = '';
-                let finalTranscript = '';
-
-                for (let i = event.resultIndex; i < event.results.length; i++) {
-                    const transcript = event.results[i][0].transcript;
-                    if (event.results[i].isFinal) {
-                        finalTranscript += transcript;
-                    } else {
-                        interimTranscript += transcript;
-                    }
-                }
-
-                const transcriptElement = document.getElementById('voiceTranscript');
-                
-                if (interimTranscript) {
-                    transcriptElement.textContent = interimTranscript;
-                    transcriptElement.classList.add('active');
-                }
-
-                if (finalTranscript) {
-                    transcriptElement.textContent = finalTranscript;
-                    adicionarPorBairro(finalTranscript);
-                    
-                    setTimeout(() => {
-                        transcriptElement.textContent = 'Diga o nome do bairro...';
-                        transcriptElement.classList.remove('active');
-                    }, 1500);
-                }
-            };
-
-            recognition.onerror = (event) => {
-                console.error('Erro no reconhecimento de voz:', event.error);
-                if (event.error === 'no-speech') {
-                    document.getElementById('voiceStatus').textContent = '🔇 Nenhuma fala detectada';
-                } else if (event.error !== 'aborted') {
-                    mostrarNotificacao('❌ Erro no reconhecimento de voz', 'error');
-                }
-            };
-
-            recognition.onend = () => {
-                if (isListening) {
-                    try {
-                        recognition.start();
-                    } catch (e) {
-                        console.log('Reconhecimento encerrado');
-                    }
-                }
-            };
-        }
-
-        function toggleVoiceRecognition() {
-            if (!isListening) {
-                if (!recognition) {
-                    iniciarReconhecimentoVoz();
-                }
-                try {
-                    recognition.start();
-                } catch (e) {
-                    console.log('Reconhecimento já iniciado');
-                }
-            } else {
-                stopVoiceRecognition();
+        function atualizarHistoricoAberto() {
+            const modal = document.getElementById('historicoModal');
+            if (modal.style.display === 'flex') {
+                mostrarHistorico(); // Recarrega o conteúdo
             }
         }
 
-        function stopVoiceRecognition() {
-            isListening = false;
-            if (recognition) {
-                recognition.stop();
-            }
-            document.getElementById('voiceBtn').classList.remove('listening');
-            document.getElementById('voiceModal').classList.remove('active');
-            lastVoiceInput = null;
-            lastVoiceTime = 0;
-        }
-
+        // ===== OUTRAS FUNÇÕES =====
         function recolherTudo() {
             document.querySelectorAll('.city-column').forEach(col => col.classList.remove('active'));
         }
 
         function resetarTudo() {
-            if (historico.length > 0) {
-                if (!confirm('Deseja realmente limpar todos os bairros adicionados?')) {
-                    return;
-                }
-            }
-            
             totalGeral = 0;
-            historico = [];
-            lastVoiceInput = null;
-            lastVoiceTime = 0;
+            ordemAdicao = [];
             document.getElementById('total-amount').innerText = '0,00';
+            
             for (const id in contagens) {
                 contagens[id] = 0;
                 const el = document.getElementById(`count-${id}`);
-                if (el) { el.innerText = '0'; el.classList.remove('has-value'); }
+                if (el) { 
+                    el.innerText = '0'; 
+                    el.classList.remove('has-value'); 
+                }
             }
             recolherTudo();
             fecharHistorico();
         }
 
-        // Fechar modal ao clicar fora
-        document.getElementById('historyModal').addEventListener('click', (e) => {
-            if (e.target.id === 'historyModal') {
-                fecharHistorico();
-            }
-        });
-
-        document.getElementById('voiceModal').addEventListener('click', (e) => {
-            if (e.target.id === 'voiceModal') {
-                stopVoiceRecognition();
-            }
-        });
-
         // Inicialização
-        construirMapaBairros();
         renderizarApp();
     </script>
 </body>
