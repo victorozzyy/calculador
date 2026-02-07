@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -269,6 +270,143 @@
             background: #dc2626;
         }
 
+        /* Modal de Histórico */
+        .history-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .history-modal.active {
+            display: flex;
+        }
+
+        .history-modal-content {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--bg-color);
+        }
+
+        .history-header h2 {
+            color: var(--text-dark);
+            font-size: 1.3rem;
+        }
+
+        .btn-close-history {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+            transition: color 0.2s;
+        }
+
+        .btn-close-history:hover {
+            color: var(--text-dark);
+        }
+
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .history-item {
+            background: var(--bg-color);
+            padding: 12px 15px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s;
+        }
+
+        .history-item:hover {
+            background: #e5e7eb;
+        }
+
+        .history-item-info {
+            flex: 1;
+        }
+
+        .history-item-name {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 3px;
+        }
+
+        .history-item-city {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .history-item-count {
+            font-weight: bold;
+            color: var(--primary);
+            margin-right: 15px;
+            font-size: 1.1rem;
+        }
+
+        .history-item-value {
+            font-weight: bold;
+            color: var(--success);
+            min-width: 70px;
+            text-align: right;
+        }
+
+        .history-empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-light);
+        }
+
+        .history-empty-icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        .history-summary {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 2px solid var(--bg-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.1rem;
+        }
+
+        .history-summary-label {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .history-summary-total {
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 1.3rem;
+        }
+
         /* Rodapé Fixo */
         .bottom-bar {
             position: fixed;
@@ -316,6 +454,15 @@
 
         .btn-collapse:hover {
             background-color: #4b5563;
+        }
+
+        .btn-history {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-history:hover {
+            background-color: var(--primary-hover);
         }
 
         .btn-reset {
@@ -398,33 +545,38 @@
             .bottom-buttons {
                 width: 100%;
                 justify-content: center;
+                flex-wrap: wrap;
             }
 
             body { 
-                padding-bottom: 120px; 
+                padding-bottom: 140px; 
             }
 
             .btn-voice {
-                bottom: 130px;
+                bottom: 150px;
                 right: 15px;
             }
         }
 
         /* Scrollbar estilizada */
-        .neighborhood-list::-webkit-scrollbar {
+        .neighborhood-list::-webkit-scrollbar,
+        .history-modal-content::-webkit-scrollbar {
             width: 6px;
         }
 
-        .neighborhood-list::-webkit-scrollbar-track {
+        .neighborhood-list::-webkit-scrollbar-track,
+        .history-modal-content::-webkit-scrollbar-track {
             background: #f1f1f1;
         }
 
-        .neighborhood-list::-webkit-scrollbar-thumb {
+        .neighborhood-list::-webkit-scrollbar-thumb,
+        .history-modal-content::-webkit-scrollbar-thumb {
             background: #c1c1c1;
             border-radius: 3px;
         }
 
-        .neighborhood-list::-webkit-scrollbar-thumb:hover {
+        .neighborhood-list::-webkit-scrollbar-thumb:hover,
+        .history-modal-content::-webkit-scrollbar-thumb:hover {
             background: #a1a1a1;
         }
     </style>
@@ -451,6 +603,19 @@
         </div>
     </div>
 
+    <!-- Modal de Histórico -->
+    <div class="history-modal" id="historyModal">
+        <div class="history-modal-content">
+            <div class="history-header">
+                <h2>📋 Bairros Adicionados</h2>
+                <button class="btn-close-history" onclick="fecharHistorico()">✕</button>
+            </div>
+            <div class="history-list" id="historyList">
+                <!-- Será preenchido dinamicamente -->
+            </div>
+        </div>
+    </div>
+
     <!-- Notificação -->
     <div class="notification" id="notification">
         <span id="notificationText"></span>
@@ -459,6 +624,7 @@
     <div class="bottom-bar">
         <div class="bottom-buttons">
             <button class="btn-action btn-collapse" onclick="recolherTudo()">Recolher</button>
+            <button class="btn-action btn-history" onclick="mostrarHistorico()">📋 Histórico</button>
             <button class="btn-action btn-reset" onclick="resetarTudo()">Limpar</button>
         </div>
         <div class="total-display">
@@ -531,6 +697,7 @@
 
         let totalGeral = 0;
         let contagens = {};
+        let historico = []; // Array para armazenar histórico em ordem
         let recognition;
         let isListening = false;
 
@@ -596,9 +763,9 @@
                             <span class="price">R$ ${formatarMoeda(bairro.valor)}</span>
                         </div>
                         <div class="controls">
-                            <button class="btn-control btn-minus" onclick="alterarValor('${idUnico}', -1, ${bairro.valor})">−</button>
+                            <button class="btn-control btn-minus" onclick="alterarValor('${idUnico}', -1, ${bairro.valor}, '${bairro.nome}', '${cidade}')">−</button>
                             <span class="counter" id="count-${idUnico}">0</span>
-                            <button class="btn-control btn-plus" onclick="alterarValor('${idUnico}', 1, ${bairro.valor})">+</button>
+                            <button class="btn-control btn-plus" onclick="alterarValor('${idUnico}', 1, ${bairro.valor}, '${bairro.nome}', '${cidade}')">+</button>
                         </div>
                     `;
                     lista.appendChild(item);
@@ -610,7 +777,7 @@
             }
         }
 
-        function alterarValor(id, operacao, valorBairro) {
+        function alterarValor(id, operacao, valorBairro, nomeBairro, cidade) {
             if (operacao === -1 && contagens[id] === 0) return;
 
             contagens[id] += operacao;
@@ -623,6 +790,24 @@
             totalGeral = Math.max(0, Math.round(totalGeral * 100) / 100);
 
             document.getElementById('total-amount').innerText = formatarMoeda(totalGeral);
+
+            // Atualizar histórico
+            if (operacao === 1) {
+                historico.push({
+                    nome: nomeBairro,
+                    cidade: cidade,
+                    valor: valorBairro,
+                    id: id
+                });
+            } else if (operacao === -1) {
+                // Remove a última ocorrência deste bairro
+                for (let i = historico.length - 1; i >= 0; i--) {
+                    if (historico[i].id === id) {
+                        historico.splice(i, 1);
+                        break;
+                    }
+                }
+            }
         }
 
         function adicionarPorBairro(nomeBairro) {
@@ -632,7 +817,7 @@
                 const { cidade, bairro } = bairroMap[normalizado];
                 const idUnico = `${cidade}-${bairro.nome}`.replace(/\s+/g, '_');
                 
-                alterarValor(idUnico, 1, bairro.valor);
+                alterarValor(idUnico, 1, bairro.valor, bairro.nome, cidade);
                 mostrarNotificacao(`✅ ${bairro.nome} adicionado!`, 'success');
                 return true;
             }
@@ -643,7 +828,7 @@
                     const { cidade, bairro } = bairroMap[key];
                     const idUnico = `${cidade}-${bairro.nome}`.replace(/\s+/g, '_');
                     
-                    alterarValor(idUnico, 1, bairro.valor);
+                    alterarValor(idUnico, 1, bairro.valor, bairro.nome, cidade);
                     mostrarNotificacao(`✅ ${bairro.nome} adicionado!`, 'success');
                     return true;
                 }
@@ -651,6 +836,70 @@
             
             mostrarNotificacao(`❌ Bairro "${nomeBairro}" não encontrado`, 'error');
             return false;
+        }
+
+        function mostrarHistorico() {
+            const modal = document.getElementById('historyModal');
+            const listElement = document.getElementById('historyList');
+            
+            if (historico.length === 0) {
+                listElement.innerHTML = `
+                    <div class="history-empty">
+                        <div class="history-empty-icon">📭</div>
+                        <p>Nenhum bairro adicionado ainda</p>
+                    </div>
+                `;
+            } else {
+                // Agrupar e contar bairros
+                const agrupado = {};
+                historico.forEach(item => {
+                    if (!agrupado[item.id]) {
+                        agrupado[item.id] = {
+                            nome: item.nome,
+                            cidade: item.cidade,
+                            valor: item.valor,
+                            count: 0
+                        };
+                    }
+                    agrupado[item.id].count++;
+                });
+
+                let html = '';
+                // Mostrar em ordem de adição (primeira ocorrência)
+                const idsVistos = new Set();
+                historico.forEach(item => {
+                    if (!idsVistos.has(item.id)) {
+                        idsVistos.add(item.id);
+                        const dados = agrupado[item.id];
+                        const subtotal = dados.valor * dados.count;
+                        html += `
+                            <div class="history-item">
+                                <div class="history-item-info">
+                                    <div class="history-item-name">${dados.nome}</div>
+                                    <div class="history-item-city">${dados.cidade}</div>
+                                </div>
+                                <div class="history-item-count">×${dados.count}</div>
+                                <div class="history-item-value">R$ ${formatarMoeda(subtotal)}</div>
+                            </div>
+                        `;
+                    }
+                });
+
+                html += `
+                    <div class="history-summary">
+                        <span class="history-summary-label">Total Geral:</span>
+                        <span class="history-summary-total">R$ ${formatarMoeda(totalGeral)}</span>
+                    </div>
+                `;
+
+                listElement.innerHTML = html;
+            }
+            
+            modal.classList.add('active');
+        }
+
+        function fecharHistorico() {
+            document.getElementById('historyModal').classList.remove('active');
         }
 
         function mostrarNotificacao(texto, tipo) {
@@ -758,7 +1007,14 @@
         }
 
         function resetarTudo() {
+            if (historico.length > 0) {
+                if (!confirm('Deseja realmente limpar todos os bairros adicionados?')) {
+                    return;
+                }
+            }
+            
             totalGeral = 0;
+            historico = [];
             document.getElementById('total-amount').innerText = '0,00';
             for (const id in contagens) {
                 contagens[id] = 0;
@@ -766,7 +1022,15 @@
                 if (el) { el.innerText = '0'; el.classList.remove('has-value'); }
             }
             recolherTudo();
+            fecharHistorico();
         }
+
+        // Fechar modal ao clicar fora
+        document.getElementById('historyModal').addEventListener('click', (e) => {
+            if (e.target.id === 'historyModal') {
+                fecharHistorico();
+            }
+        });
 
         // Inicialização
         construirMapaBairros();
