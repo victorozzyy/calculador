@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -171,6 +170,105 @@
             color: var(--primary);
         }
 
+        /* Botão de Voz */
+        .btn-voice {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            font-size: 1.8rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s;
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-voice:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn-voice.listening {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Modal de Voz */
+        .voice-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .voice-modal.active {
+            display: flex;
+        }
+
+        .voice-modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .voice-status {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+        }
+
+        .voice-transcript {
+            background: var(--bg-color);
+            padding: 15px;
+            border-radius: 8px;
+            min-height: 60px;
+            margin-bottom: 20px;
+            font-style: italic;
+            color: var(--text-light);
+        }
+
+        .voice-transcript.active {
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .btn-close-modal {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-close-modal:hover {
+            background: #dc2626;
+        }
+
         /* Rodapé Fixo */
         .bottom-bar {
             position: fixed;
@@ -229,6 +327,46 @@
             background-color: #dc2626;
         }
 
+        /* Notificação */
+        .notification {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            z-index: 3000;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            max-width: 300px;
+        }
+
+        .notification.show {
+            display: flex;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .notification.success {
+            border-left: 4px solid var(--success);
+        }
+
+        .notification.error {
+            border-left: 4px solid var(--danger);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
         /* Responsividade */
         @media (max-width: 1200px) {
             .container {
@@ -265,6 +403,11 @@
             body { 
                 padding-bottom: 120px; 
             }
+
+            .btn-voice {
+                bottom: 130px;
+                right: 15px;
+            }
         }
 
         /* Scrollbar estilizada */
@@ -294,8 +437,27 @@
 
     <div class="container" id="app"></div>
 
+    <!-- Botão de Voz -->
+    <button class="btn-voice" id="voiceBtn" onclick="toggleVoiceRecognition()" title="Adicionar por voz">
+        🎤
+    </button>
+
+    <!-- Modal de Voz -->
+    <div class="voice-modal" id="voiceModal">
+        <div class="voice-modal-content">
+            <div class="voice-status" id="voiceStatus">🎤 Ouvindo...</div>
+            <div class="voice-transcript" id="voiceTranscript">Diga o nome do bairro...</div>
+            <button class="btn-close-modal" onclick="stopVoiceRecognition()">Parar</button>
+        </div>
+    </div>
+
+    <!-- Notificação -->
+    <div class="notification" id="notification">
+        <span id="notificationText"></span>
+    </div>
+
     <div class="bottom-bar">
-        <div class="action-group">
+        <div class="bottom-buttons">
             <button class="btn-action btn-collapse" onclick="recolherTudo()">Recolher</button>
             <button class="btn-action btn-reset" onclick="resetarTudo()">Limpar</button>
         </div>
@@ -369,6 +531,32 @@
 
         let totalGeral = 0;
         let contagens = {};
+        let recognition;
+        let isListening = false;
+
+        // Mapa de normalização de bairros
+        const bairroMap = {};
+
+        function normalizarTexto(texto) {
+            return texto
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/[^a-z0-9\s]/g, '')
+                .trim();
+        }
+
+        function construirMapaBairros() {
+            for (const cidade in dadosEntregas) {
+                dadosEntregas[cidade].bairros.forEach(bairro => {
+                    const normalizado = normalizarTexto(bairro.nome);
+                    bairroMap[normalizado] = {
+                        cidade: cidade,
+                        bairro: bairro
+                    };
+                });
+            }
+        }
 
         function formatarMoeda(valor) {
             return valor.toFixed(2).replace('.', ',');
@@ -381,7 +569,6 @@
             for (const cidade in dadosEntregas) {
                 const dados = dadosEntregas[cidade];
                 
-                // --- ORDENAÇÃO ALFABÉTICA AQUI ---
                 const bairrosOrdenados = [...dados.bairros].sort((a, b) => 
                     a.nome.localeCompare(b.nome, 'pt-BR', { sensitivity: 'base' })
                 );
@@ -438,6 +625,134 @@
             document.getElementById('total-amount').innerText = formatarMoeda(totalGeral);
         }
 
+        function adicionarPorBairro(nomeBairro) {
+            const normalizado = normalizarTexto(nomeBairro);
+            
+            if (bairroMap[normalizado]) {
+                const { cidade, bairro } = bairroMap[normalizado];
+                const idUnico = `${cidade}-${bairro.nome}`.replace(/\s+/g, '_');
+                
+                alterarValor(idUnico, 1, bairro.valor);
+                mostrarNotificacao(`✅ ${bairro.nome} adicionado!`, 'success');
+                return true;
+            }
+            
+            // Busca parcial
+            for (const key in bairroMap) {
+                if (key.includes(normalizado) || normalizado.includes(key)) {
+                    const { cidade, bairro } = bairroMap[key];
+                    const idUnico = `${cidade}-${bairro.nome}`.replace(/\s+/g, '_');
+                    
+                    alterarValor(idUnico, 1, bairro.valor);
+                    mostrarNotificacao(`✅ ${bairro.nome} adicionado!`, 'success');
+                    return true;
+                }
+            }
+            
+            mostrarNotificacao(`❌ Bairro "${nomeBairro}" não encontrado`, 'error');
+            return false;
+        }
+
+        function mostrarNotificacao(texto, tipo) {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notificationText');
+            
+            notificationText.textContent = texto;
+            notification.className = `notification ${tipo} show`;
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        function iniciarReconhecimentoVoz() {
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                mostrarNotificacao('❌ Seu navegador não suporta reconhecimento de voz', 'error');
+                return;
+            }
+
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
+            
+            recognition.lang = 'pt-BR';
+            recognition.continuous = true;
+            recognition.interimResults = true;
+
+            recognition.onstart = () => {
+                isListening = true;
+                document.getElementById('voiceBtn').classList.add('listening');
+                document.getElementById('voiceModal').classList.add('active');
+                document.getElementById('voiceStatus').textContent = '🎤 Ouvindo...';
+                document.getElementById('voiceTranscript').textContent = 'Diga o nome do bairro...';
+            };
+
+            recognition.onresult = (event) => {
+                let interimTranscript = '';
+                let finalTranscript = '';
+
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    const transcript = event.results[i][0].transcript;
+                    if (event.results[i].isFinal) {
+                        finalTranscript += transcript;
+                    } else {
+                        interimTranscript += transcript;
+                    }
+                }
+
+                const transcriptElement = document.getElementById('voiceTranscript');
+                
+                if (interimTranscript) {
+                    transcriptElement.textContent = interimTranscript;
+                    transcriptElement.classList.add('active');
+                }
+
+                if (finalTranscript) {
+                    transcriptElement.textContent = finalTranscript;
+                    adicionarPorBairro(finalTranscript);
+                    
+                    setTimeout(() => {
+                        transcriptElement.textContent = 'Diga o nome do bairro...';
+                        transcriptElement.classList.remove('active');
+                    }, 1500);
+                }
+            };
+
+            recognition.onerror = (event) => {
+                console.error('Erro no reconhecimento de voz:', event.error);
+                if (event.error === 'no-speech') {
+                    document.getElementById('voiceStatus').textContent = '🔇 Nenhuma fala detectada';
+                } else {
+                    mostrarNotificacao('❌ Erro no reconhecimento de voz', 'error');
+                }
+            };
+
+            recognition.onend = () => {
+                if (isListening) {
+                    recognition.start(); // Reinicia automaticamente
+                }
+            };
+        }
+
+        function toggleVoiceRecognition() {
+            if (!isListening) {
+                if (!recognition) {
+                    iniciarReconhecimentoVoz();
+                }
+                recognition.start();
+            } else {
+                stopVoiceRecognition();
+            }
+        }
+
+        function stopVoiceRecognition() {
+            isListening = false;
+            if (recognition) {
+                recognition.stop();
+            }
+            document.getElementById('voiceBtn').classList.remove('listening');
+            document.getElementById('voiceModal').classList.remove('active');
+        }
+
         function recolherTudo() {
             document.querySelectorAll('.city-column').forEach(col => col.classList.remove('active'));
         }
@@ -453,6 +768,8 @@
             recolherTudo();
         }
 
+        // Inicialização
+        construirMapaBairros();
         renderizarApp();
     </script>
 </body>
