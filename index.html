@@ -14,6 +14,7 @@
             --text-light: #6b7280;
             --danger: #ef4444;
             --success: #10b981;
+            --warning: #f59e0b;
         }
 
         * {
@@ -520,7 +521,7 @@
             display: none;
             align-items: center;
             gap: 10px;
-            max-width: 300px;
+            max-width: 350px;
         }
 
         .notification.show {
@@ -534,6 +535,10 @@
 
         .notification.error {
             border-left: 4px solid var(--danger);
+        }
+
+        .notification.warning {
+            border-left: 4px solid var(--warning);
         }
 
         @keyframes slideIn {
@@ -588,6 +593,11 @@
             .btn-voice {
                 bottom: 150px;
                 right: 15px;
+            }
+
+            .notification {
+                max-width: 90%;
+                right: 5%;
             }
         }
 
@@ -671,16 +681,16 @@
                 classe: "city-novo-hamburgo",
                 bairros: [
                     { nome: "Primavera", valor: 3.00 }, { nome: "Petrópolis", valor: 5.00 },
-                    { nome: "Rincão", valor: 5.00 }, { nome: "Rio Branco", valor: 5.00 },
+                    { nome: "Rincão", valor: 5.00 }, { nome: "Rio Branco (NH)", valor: 5.00 },
                     { nome: "Vila Rosa", valor: 5.00 }, { nome: "Centro (NH)", valor: 6.00 },
                     { nome: "Operário", valor: 6.00 }, { nome: "Ideal", valor: 6.00 },
                     { nome: "Pátria Nova", valor: 8.00 }, { nome: "Guarani", valor: 8.00 },
                     { nome: "Ouro Branco", valor: 8.00 }, { nome: "Liberdade", valor: 8.00 },
-                    { nome: "Boa Vista", valor: 8.00 }, { nome: "Hamburgo Velho", valor: 8.00 },
+                    { nome: "Boa Vista (NH)", valor: 8.00 }, { nome: "Hamburgo Velho", valor: 8.00 },
                     { nome: "Vila Nova", valor: 8.00 }, { nome: "Jardim Mauá", valor: 8.00 },
                     { nome: "Industrial", valor: 8.00 }, { nome: "Boa Saúde", valor: 8.00 },
                     { nome: "Canudos", valor: 10.00 }, { nome: "Mundo Novo", valor: 10.00 },
-                    { nome: "Santo Afonso", valor: 10.00 }, { nome: "São José", valor: 10.00 },
+                    { nome: "Santo Afonso", valor: 10.00 }, { nome: "São José (NH)", valor: 10.00 },
                     { nome: "São Jorge", valor: 10.00 }, { nome: "Roselândia", valor: 10.00 }
                 ]
             },
@@ -752,15 +762,15 @@
             for (const cidade in dadosEntregas) {
                 dadosEntregas[cidade].bairros.forEach(bairro => {
                     const normalizado = normalizarTexto(bairro.nome);
-                    bairroMap[normalizado] = {
-                        cidade: cidade,
-                        bairro: bairro
-                    };
                     
-                    // Adicionar versão sem sufixo para busca por voz
-                    const semSufixo = normalizado.replace(/\s*\(.*?\)\s*/g, '').trim();
-                    if (semSufixo !== normalizado && !bairroMap[semSufixo]) {
-                        bairroMap[semSufixo] = {
+                    // Não adicionar bairros duplicados no mapa global
+                    const ehDuplicado = normalizado.includes('centro') || 
+                                       normalizado.includes('belavista') || 
+                                       normalizado.includes('riobranco') || 
+                                       normalizado.includes('saojose');
+                    
+                    if (!ehDuplicado) {
+                        bairroMap[normalizado] = {
                             cidade: cidade,
                             bairro: bairro
                         };
@@ -867,6 +877,7 @@
             lastVoiceInput = normalizado;
             lastVoiceTime = agora;
             
+            // Busca exata primeiro
             if (bairroMap[normalizado]) {
                 const { cidade, bairro } = bairroMap[normalizado];
                 const idUnico = `${cidade}-${bairro.nome}`.replace(/\s+/g, '_');
@@ -876,16 +887,140 @@
                 return true;
             }
             
-            // Busca parcial
+            // Busca por contexto de cidade + bairro
+            const possiveisCombinacoes = [
+                // "centro de novo hamburgo", "centro novo hamburgo"
+                /(?:centro|bela\s*vista|rio\s*branco|sao\s*jose)\s+(?:de\s+)?(.+)/i,
+                // "novo hamburgo centro"
+                /(.+)\s+(?:centro|bela\s*vista|rio\s*branco|sao\s*jose)/i
+            ];
+            
+            for (const regex of possiveisCombinacoes) {
+                const match = nomeBairro.match(regex);
+                if (match) {
+                    const cidadeNome = normalizarTexto(match[1]);
+                    
+                    // Mapa de cidades normalizadas
+                    const cidadeMap = {
+                        'novohamburgo': 'Novo Hamburgo',
+                        'nh': 'Novo Hamburgo',
+                        'estanciavelha': 'Estância Velha',
+                        'ev': 'Estância Velha',
+                        'saoleopoldo': 'São Leopoldo',
+                        'sl': 'São Leopoldo',
+                        'campobom': 'Campo Bom',
+                        'cb': 'Campo Bom'
+                    };
+                    
+                    const cidadeReal = cidadeMap[cidadeNome];
+                    
+                    if (cidadeReal && dadosEntregas[cidadeReal]) {
+                        // Identificar qual bairro duplicado foi mencionado
+                        const textoBaixo = nomeBairro.toLowerCase();
+                        const bairroDuplicado = textoBaixo.includes('centro') ? 'centro' :
+                                               textoBaixo.includes('bela') && textoBaixo.includes('vista') ? 'belavista' :
+                                               textoBaixo.includes('rio') && textoBaixo.includes('branco') ? 'riobranco' :
+                                               textoBaixo.includes('sao') && textoBaixo.includes('jose') ? 'saojose' : null;
+                        
+                        if (bairroDuplicado) {
+                            // Buscar o bairro específico na cidade
+                            const bairroEncontrado = dadosEntregas[cidadeReal].bairros.find(b => 
+                                normalizarTexto(b.nome).includes(bairroDuplicado)
+                            );
+                            
+                            if (bairroEncontrado) {
+                                const idUnico = `${cidadeReal}-${bairroEncontrado.nome}`.replace(/\s+/g, '_');
+                                alterarValor(idUnico, 1, bairroEncontrado.valor, bairroEncontrado.nome, cidadeReal);
+                                mostrarNotificacao(`✅ ${bairroEncontrado.nome} adicionado!`, 'success');
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // Busca parcial genérica
+            const resultados = [];
             for (const key in bairroMap) {
                 if (key.includes(normalizado) || normalizado.includes(key)) {
-                    const { cidade, bairro } = bairroMap[key];
-                    const idUnico = `${cidade}-${bairro.nome}`.replace(/\s+/g, '_');
-                    
-                    alterarValor(idUnico, 1, bairro.valor, bairro.nome, cidade);
-                    mostrarNotificacao(`✅ ${bairro.nome} adicionado!`, 'success');
-                    return true;
+                    resultados.push(bairroMap[key]);
                 }
+            }
+            
+            // Verificar bairros duplicados manualmente
+            const bairrosDuplicados = [];
+            const textoBaixo = nomeBairro.toLowerCase();
+            
+            if (textoBaixo.includes('centro') || normalizado === 'centro') {
+                for (const cidade in dadosEntregas) {
+                    const bairro = dadosEntregas[cidade].bairros.find(b => 
+                        normalizarTexto(b.nome).includes('centro')
+                    );
+                    if (bairro) {
+                        bairrosDuplicados.push({ cidade, bairro });
+                    }
+                }
+            } else if ((textoBaixo.includes('bela') && textoBaixo.includes('vista')) || normalizado === 'belavista') {
+                for (const cidade in dadosEntregas) {
+                    const bairro = dadosEntregas[cidade].bairros.find(b => 
+                        normalizarTexto(b.nome).includes('belavista')
+                    );
+                    if (bairro) {
+                        bairrosDuplicados.push({ cidade, bairro });
+                    }
+                }
+            } else if ((textoBaixo.includes('rio') && textoBaixo.includes('branco')) || normalizado === 'riobranco') {
+                for (const cidade in dadosEntregas) {
+                    const bairro = dadosEntregas[cidade].bairros.find(b => 
+                        normalizarTexto(b.nome).includes('riobranco')
+                    );
+                    if (bairro) {
+                        bairrosDuplicados.push({ cidade, bairro });
+                    }
+                }
+            } else if ((textoBaixo.includes('sao') && textoBaixo.includes('jose')) || normalizado === 'saojose') {
+                for (const cidade in dadosEntregas) {
+                    const bairro = dadosEntregas[cidade].bairros.find(b => 
+                        normalizarTexto(b.nome).includes('saojose')
+                    );
+                    if (bairro) {
+                        bairrosDuplicados.push({ cidade, bairro });
+                    }
+                }
+            }
+            
+            // Se encontrou bairros duplicados, mostrar aviso
+            if (bairrosDuplicados.length > 1) {
+                const listaCidades = bairrosDuplicados.map(r => r.cidade).join(', ');
+                mostrarNotificacao(`⚠️ "${nomeBairro}" existe em: ${listaCidades}. Diga a cidade também (ex: "Centro Novo Hamburgo")`, 'warning');
+                return false;
+            }
+            
+            // Se encontrou apenas 1 resultado duplicado
+            if (bairrosDuplicados.length === 1) {
+                const { cidade, bairro } = bairrosDuplicados[0];
+                const idUnico = `${cidade}-${bairro.nome}`.replace(/\s+/g, '_');
+                
+                alterarValor(idUnico, 1, bairro.valor, bairro.nome, cidade);
+                mostrarNotificacao(`✅ ${bairro.nome} adicionado!`, 'success');
+                return true;
+            }
+            
+            // Se encontrou apenas 1 resultado normal, adiciona
+            if (resultados.length === 1) {
+                const { cidade, bairro } = resultados[0];
+                const idUnico = `${cidade}-${bairro.nome}`.replace(/\s+/g, '_');
+                
+                alterarValor(idUnico, 1, bairro.valor, bairro.nome, cidade);
+                mostrarNotificacao(`✅ ${bairro.nome} adicionado!`, 'success');
+                return true;
+            }
+            
+            // Se encontrou múltiplos, mostra ambiguidade
+            if (resultados.length > 1) {
+                const listaBairros = resultados.map(r => `${r.bairro.nome} (${r.cidade})`).join(', ');
+                mostrarNotificacao(`⚠️ "${nomeBairro}" pode ser: ${listaBairros}. Seja mais específico.`, 'warning');
+                return false;
             }
             
             mostrarNotificacao(`❌ Bairro "${nomeBairro}" não encontrado`, 'error');
@@ -985,7 +1120,7 @@
             
             setTimeout(() => {
                 notification.classList.remove('show');
-            }, 3000);
+            }, tipo === 'warning' ? 5000 : 3000); // Avisos ficam 5 segundos
         }
 
         function iniciarReconhecimentoVoz() {
@@ -1053,7 +1188,7 @@
             recognition.onend = () => {
                 if (isListening) {
                     try {
-                        recognition.start(); // Reinicia automaticamente
+                        recognition.start();
                     } catch (e) {
                         console.log('Reconhecimento encerrado');
                     }
@@ -1116,6 +1251,12 @@
         document.getElementById('historyModal').addEventListener('click', (e) => {
             if (e.target.id === 'historyModal') {
                 fecharHistorico();
+            }
+        });
+
+        document.getElementById('voiceModal').addEventListener('click', (e) => {
+            if (e.target.id === 'voiceModal') {
+                stopVoiceRecognition();
             }
         });
 
