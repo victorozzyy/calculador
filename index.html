@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CCalculadora de Taxas de Entrega</title>
+    <title>Calculadora de Taxas de Entrega</title>
     <style>
+        /* ===== ESTILOS EXISTENTES (IGUAIS AO ANTERIOR) ===== */
         :root {
             --primary: #2563eb;
             --primary-hover: #1d4ed8;
@@ -84,7 +85,6 @@
             transform: rotate(180deg);
         }
 
-        /* Cores das cidades */
         .city-novo-hamburgo .city-header { background: linear-gradient(135deg, #f59e0b, #d97706); }
         .city-estancia-velha .city-header { background: linear-gradient(135deg, #10b981, #059669); }
         .city-sao-leopoldo .city-header { background: linear-gradient(135deg, #3b82f6, #2563eb); }
@@ -171,7 +171,7 @@
             color: var(--primary);
         }
 
-        /* Rodapé Fixo */
+        /* Rodapé */
         .bottom-bar {
             position: fixed;
             bottom: 0;
@@ -249,6 +249,7 @@
         .btn-voice {
             background-color: var(--voice);
             color: white;
+            position: relative;
         }
 
         .btn-voice:hover {
@@ -265,7 +266,69 @@
             100% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0); }
         }
 
-        /* ===== Modal de Histórico ===== */
+        /* ===== NOVO: FEEDBACK VISUAL ===== */
+        .voice-feedback {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            border-radius: 10px;
+            padding: 15px 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            z-index: 9999;
+            display: none;
+            max-width: 90%;
+            width: max-content;
+            min-width: 300px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .voice-feedback.show {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; top: -50px; }
+            to { opacity: 1; top: 20px; }
+        }
+
+        .feedback-text {
+            font-weight: 500;
+            margin-bottom: 10px;
+            color: #374151;
+        }
+
+        .feedback-options {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .option-btn {
+            background: #f3f4f6;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-btn:hover {
+            background: #e5e7eb;
+            border-color: #9ca3af;
+        }
+
+        .option-btn.selected {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Modal Histórico (igual ao anterior) */
         .modal {
             display: none;
             position: fixed;
@@ -349,59 +412,25 @@
             color: var(--primary);
         }
 
-        /* Responsividade */
-        @media (max-width: 1200px) {
-            .container {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-
-        @media (max-width: 800px) {
-            .container {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
         @media (max-width: 550px) {
             .container {
                 grid-template-columns: 1fr;
             }
-            
             header h1 {
                 font-size: 1.2rem;
             }
-
             .bottom-bar {
                 flex-direction: column;
                 gap: 10px;
                 padding: 10px 15px;
             }
-
             .bottom-buttons {
                 width: 100%;
                 justify-content: center;
             }
-
             body { 
                 padding-bottom: 120px; 
             }
-        }
-
-        /* Scrollbar */
-        .neighborhood-list::-webkit-scrollbar,
-        .modal-content::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .neighborhood-list::-webkit-scrollbar-track,
-        .modal-content::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-
-        .neighborhood-list::-webkit-scrollbar-thumb,
-        .modal-content::-webkit-scrollbar-thumb {
-            background: #c1c1c1;
-            border-radius: 3px;
         }
     </style>
 </head>
@@ -413,7 +442,13 @@
 
     <div class="container" id="app"></div>
 
-    <!-- Modal de Histórico -->
+    <!-- ===== FEEDBACK VISUAL ===== -->
+    <div class="voice-feedback" id="voiceFeedback">
+        <div class="feedback-text" id="feedbackText">Ouvindo...</div>
+        <div class="feedback-options" id="feedbackOptions"></div>
+    </div>
+
+    <!-- Modal Histórico -->
     <div id="historicoModal" class="modal">
         <div class="modal-content">
             <span class="modal-close" onclick="fecharHistorico()">&times;</span>
@@ -540,15 +575,16 @@
 
         let totalGeral = 0;
         let contagens = {};
-        let ordemAdicao = []; // Ordem de adição (primeira vez que passa de 0)
-        let isRecognizing = false; // Flag para evitar voz duplicada
+        let ordemAdicao = [];
+        let isRecognizing = false;
+        let feedbackTimeout;
 
         // Formatação de moeda
         function formatarMoeda(valor) {
             return valor.toFixed(2).replace('.', ',');
         }
 
-        // Renderização dos cards das cidades
+        // Renderização dos cards
         function renderizarApp() {
             const app = document.getElementById('app');
             app.innerHTML = '';
@@ -556,7 +592,7 @@
             for (const cidade in dadosEntregas) {
                 const dados = dadosEntregas[cidade];
                 
-                // Ordena alfabeticamente os bairros
+                // Ordena alfabeticamente
                 const bairrosOrdenados = [...dados.bairros].sort((a, b) => 
                     a.nome.localeCompare(b.nome, 'pt-BR', { sensitivity: 'base' })
                 );
@@ -598,7 +634,7 @@
             }
         }
 
-        // Alterar quantidade (soma/subtrai)
+        // Alterar quantidade
         function alterarValor(id, operacao, valorBairro, cidade, bairroNome) {
             if (operacao === -1 && contagens[id] === 0) return;
 
@@ -621,12 +657,12 @@
             totalGeral = Math.max(0, Math.round(totalGeral * 100) / 100);
             document.getElementById('total-amount').innerText = formatarMoeda(totalGeral);
             
-            atualizarHistoricoAberto(); // Atualiza se o modal estiver aberto
+            atualizarHistoricoAberto();
         }
 
-        // ===== RECONHECIMENTO DE VOZ =====
+        // ===== RECONHECIMENTO DE VOZ + FEEDBACK =====
         function iniciarReconhecimentoVoz() {
-            if (isRecognizing) return; // Bloqueia múltiplas execuções
+            if (isRecognizing) return;
             isRecognizing = true;
 
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -642,7 +678,14 @@
             recognition.maxAlternatives = 1;
 
             const btnVoz = document.getElementById('btnVoz');
+            const feedback = document.getElementById('voiceFeedback');
+            const feedbackText = document.getElementById('feedbackText');
+            const feedbackOptions = document.getElementById('feedbackOptions');
+
             btnVoz.classList.add('listening');
+            feedback.classList.add('show');
+            feedbackText.textContent = 'Ouvindo...';
+            feedbackOptions.innerHTML = '';
 
             recognition.onstart = () => console.log("Ouvindo...");
 
@@ -650,96 +693,131 @@
                 console.error("Erro:", event.error);
                 isRecognizing = false;
                 btnVoz.classList.remove('listening');
+                feedback.classList.remove('show');
             };
 
             recognition.onend = () => {
                 isRecognizing = false;
                 btnVoz.classList.remove('listening');
+                // Mantém o feedback por 3s se não houver opções
+                clearTimeout(feedbackTimeout);
+                feedbackTimeout = setTimeout(() => {
+                    feedback.classList.remove('show');
+                }, 3000);
             };
 
             recognition.onresult = (event) => {
                 const transcript = event.results[0][0].transcript.toLowerCase().trim();
                 console.log("Comando:", transcript);
-                processarComandoVoz(transcript);
+                
+                // Busca por correspondências
+                encontrarBairros(transcript);
             };
 
             recognition.start();
         }
 
-        // Processa comandos de voz
-        function processarComandoVoz(comando) {
-            // Extrai quantidade (ex: "5", "três", "10,50")
-            let quantidade = 1;
-            const numMatch = comando.match(/(\d+)(?:[,.](\d{1,2}))|\b(um|dois|três|quatro|cinco|seis|sete|oito|nove|dez)\b/gi);
-            
-            if (numMatch) {
-                const numStr = numMatch[0].replace('.', ',');
-                if (!isNaN(numStr)) {
-                    quantidade = parseFloat(numStr) || 1;
-                } else {
-                    // Conversão por extenso (simplificado)
-                    const numerosExtenso = {
-                        'um': 1, 'dois': 2, 'três': 3, 'tres': 3, 'quatro': 4,
-                        'cinco': 5, 'seis': 6, 'sete': 7, 'oito': 8, 'nove': 9,
-                        'dez': 10
-                    };
-                    quantidade = numerosExtenso[numStr] || 1;
-                }
-            }
+        // Encontra bairros que correspondem ao comando
+        function encontrarBairros(comando) {
+            const feedbackText = document.getElementById('feedbackText');
+            const feedbackOptions = document.getElementById('feedbackOptions');
+            feedbackOptions.innerHTML = '';
 
-            // Procura por cidade e bairro no comando
+            // 1. Verifica se tem cidade explícita (ex: "centro de novo hamburgo")
             let cidadeAlvo = null;
-            let bairroAlvo = null;
+            let bairrosEncontrados = [];
 
-            // 1. Verifica se tem "de [cidade]"
+            // Procura por padrões "de [cidade]" ou "[cidade] [bairro]"
             for (const cidade of Object.keys(dadosEntregas)) {
                 const nomeCidade = cidade.toLowerCase();
+                // Padrão: "centro de novo hamburgo" OR "novo hamburgo centro"
                 if (comando.includes(`de ${nomeCidade}`) || comando.includes(nomeCidade)) {
                     cidadeAlvo = cidade;
                     break;
                 }
             }
 
-            // 2. Se encontrou cidade, procura o bairro dentro dela
             if (cidadeAlvo) {
+                // Busca APENAS na cidade encontrada
                 const bairros = dadosEntregas[cidadeAlvo].bairros;
                 for (const b of bairros) {
                     const nomeBairro = b.nome.toLowerCase();
                     if (comando.includes(nomeBairro)) {
-                        bairroAlvo = b;
-                        break;
+                        bairrosEncontrados.push({ ...b, cidade: cidadeAlvo });
+                        break; // Pega o primeiro match
                     }
                 }
             } else {
-                // 3. Se não tem cidade, procura o bairro em TODAS as cidades (pega o 1º)
-                OUTER: for (const cidade of Object.keys(dadosEntregas)) {
-                    for (const b of dadosEntregas[cidade].bairros) {
+                // Busca em TODAS as cidades
+                for (const cidade of Object.keys(dadosEntregas)) {
+                    const bairros = dadosEntregas[cidade].bairros;
+                    for (const b of bairros) {
                         const nomeBairro = b.nome.toLowerCase();
                         if (comando.includes(nomeBairro)) {
-                            cidadeAlvo = cidade;
-                            bairroAlvo = b;
-                            break OUTER;
+                            bairrosEncontrados.push({ ...b, cidade });
                         }
                     }
                 }
             }
 
-            // Se encontrou, adiciona
-            if (bairroAlvo && cidadeAlvo) {
-                const id = `${cidadeAlvo}-${bairroAlvo.nome}`.replace(/\s+/g, '_');
-                alterarValor(id, quantidade, bairroAlvo.valor, cidadeAlvo, bairroAlvo.nome);
+            // Exibe feedback
+            if (bairrosEncontrados.length === 0) {
+                feedbackText.textContent = `Nenhum bairro encontrado para: "${comando}"`;
+                feedbackOptions.innerHTML = `
+                    <button class="option-btn" onclick="document.getElementById('voiceFeedback').classList.remove('show')">
+                        Fechar
+                    </button>
+                `;
+            } else if (bairrosEncontrados.length === 1) {
+                // Única opção → adiciona diretamente
+                const { cidade, nome, valor } = bairrosEncontrados[0];
+                feedbackText.textContent = `Adicionando: "${nome}" em ${cidade}`;
+                
+                const id = `${cidade}-${nome}`.replace(/\s+/g, '_');
+                // Extrai quantidade do comando (ex: "cinco centro")
+                const qtdMatch = comando.match(/(\d+)/);
+                const qtd = qtdMatch ? parseInt(qtdMatch[0], 10) : 1;
+                
+                for (let i = 0; i < qtd; i++) {
+                    alterarValor(id, 1, valor, cidade, nome);
+                }
+                
+                // Fecha feedback após 2s
+                clearTimeout(feedbackTimeout);
+                feedbackTimeout = setTimeout(() => {
+                    document.getElementById('voiceFeedback').classList.remove('show');
+                }, 2000);
             } else {
-                alert("Bairro não encontrado. Tente: 'cinco centro de novo hamburgo' ou '10 ivoti'.");
+                // Várias opções → mostra botões para escolher
+                feedbackText.textContent = `Encontramos várias opções para "${comando}". Selecione:`;
+                
+                bairrosEncontrados.forEach(item => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    btn.textContent = `${item.nome} (${item.cidade}) - R$ ${formatarMoeda(item.valor)}`;
+                    btn.onclick = () => {
+                        const id = `${item.cidade}-${item.nome}`.replace(/\s+/g, '_');
+                        // Extrai quantidade
+                        const qtdMatch = comando.match(/(\d+)/);
+                        const qtd = qtdMatch ? parseInt(qtdMatch[0], 10) : 1;
+                        
+                        for (let i = 0; i < qtd; i++) {
+                            alterarValor(id, 1, item.valor, item.cidade, item.nome);
+                        }
+                        
+                        document.getElementById('voiceFeedback').classList.remove('show');
+                    };
+                    feedbackOptions.appendChild(btn);
+                });
             }
         }
 
-        // ===== HISTÓRICO =====
+        // ===== HISTÓRICO (igual ao anterior) =====
         function mostrarHistorico() {
             const modal = document.getElementById('historicoModal');
             const lista = document.getElementById('historicoLista');
             lista.innerHTML = '';
 
-            // Filtra apenas itens com quantidade > 0 (na ordem de adição)
             const itensAtivos = ordemAdicao.filter(item => contagens[item.id] > 0);
 
             if (itensAtivos.length === 0) {
@@ -778,7 +856,7 @@
         function atualizarHistoricoAberto() {
             const modal = document.getElementById('historicoModal');
             if (modal.style.display === 'flex') {
-                mostrarHistorico(); // Recarrega o conteúdo
+                mostrarHistorico();
             }
         }
 
@@ -802,6 +880,7 @@
             }
             recolherTudo();
             fecharHistorico();
+            document.getElementById('voiceFeedback').classList.remove('show');
         }
 
         // Inicialização
