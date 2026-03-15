@@ -277,6 +277,7 @@ function exportarDados() {
     const dataHora = formatarDataHora();
     const totalBairros = contarBairrosAtivos();
     const valorEntregas = totalBairros * 5; // Cálculo: entregas x 5
+    const somaFinal = totalGeral + valorEntregas; // Soma total
     
     let texto = `📋 RELATÓRIO DE ENTREGAS\n`;
     texto += `━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
@@ -309,7 +310,9 @@ function exportarDados() {
     texto += `\n━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
     texto += `📊 RESUMO:\n`;
     texto += `   • Total de entregas: ${totalBairros} (R$ ${formatarMoeda(valorEntregas)})\n`;
-    texto += `   • Valor total: R$ ${formatarMoeda(totalGeral)}\n`;
+    texto += `   • Valor taxas: R$ ${formatarMoeda(totalGeral)}\n`;
+    texto += `   ──────────────────────\n`;
+    texto += `   💰 TOTAL FINAL: R$ ${formatarMoeda(somaFinal)}\n`;
     texto += `━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
     
     // Copia para área de transferência
