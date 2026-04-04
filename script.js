@@ -44,7 +44,8 @@ const dadosEntregas = {
             { nome: "Bela Vista", valor: 15.00 }, 
             { nome: "Lira", valor: 15.00 },
             { nome: "Lago Azul", valor: 15.00 }, 
-            { nome: "Das Quintas", valor: 18.00 }
+            { nome: "Das Quintas", valor: 18.00 },
+            { nome: "Campo Grande", valor: 20.00 }
         ]
     },
     "São Leopoldo": {
