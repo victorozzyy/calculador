@@ -27,7 +27,8 @@ const dadosEntregas = {
             { nome: "Santo Afonso", valor: 10.00 }, 
             { nome: "São José", valor: 10.00 },
             { nome: "São Jorge", valor: 10.00 }, 
-            { nome: "Roselândia", valor: 10.00 }
+            { nome: "Roselândia", valor: 8.00 },
+            { nome: "Alpes do Vale", valor: 10.00 }
         ]
     },
     "Estância Velha": {
